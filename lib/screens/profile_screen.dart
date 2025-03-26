@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
-//import '../widgets/bottom_navigation_bar.dart'; // Alt menü widget'ını ekleyin
+import '../widgets/bottom_navigation_bar.dart'; // Alt menü widget'ını ekleyin
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -33,7 +33,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: const Color.fromARGB(255, 16, 42, 63),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 16, 42, 63),
-        title: const Text('Profil'),
+        title: const Text(
+          'Profil',
+          style: TextStyle(
+            color: Colors.white, // Beyaz renk
+            fontSize: 22, // Font boyutu büyütüldü
+            fontWeight: FontWeight.bold, // Kalın yazı
+            letterSpacing: 1.2, // Harf aralığı artırıldı
+          ),
+        ),
       ),
       body: const Center(
         child: Text(
