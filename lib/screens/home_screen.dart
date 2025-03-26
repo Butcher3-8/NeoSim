@@ -25,6 +25,30 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 16, 42, 63), // AppBar rengini aynı yaptık
         title: const Text('Home Screen'),
+        actions: [
+          // Sağ üst köşeye şeffaf bir "Giriş Yap" butonu ekliyoruz
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: TextButton(
+              onPressed: () {
+                // Burada giriş yap butonuna tıklandığında yapılacak işlemi ekleyebilirsiniz
+                print("Giriş Yap butonuna tıklandı");
+              },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white, backgroundColor: Colors.transparent, // Arka planı şeffaf yapıyoruz
+                side: const BorderSide(color: Colors.white, width: 2), // Beyaz kenarlık ekliyoruz
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8), // Yuvarlatılmış köşeler
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // İç boşluk
+              ),
+              child: const Text(
+                'Giriş Yap',
+                style: TextStyle(fontSize: 16), // Yazı boyutu
+              ),
+            ),
+          ),
+        ],
       ),
       body: Center(
         // Seçilen sekmeye göre içerik gösterme
