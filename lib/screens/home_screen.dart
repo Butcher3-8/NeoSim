@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/services/bottom_navigation_bar.dart';
+import 'package:go_router/go_router.dart';
+//import '../widgets/bottom_navigation_bar.dart'; // Alt menü widget'ını ekleyin
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,96 +11,41 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Bottom navigation bar'da hangi sekmenin seçili olduğunu belirlemek için
   int _selectedIndex = 1; // Başlangıçta "Simlerim" seçili
 
-  // Her bir sekme için ekranda ne gösterileceği
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
+    // GoRouter ile yönlendirme
+    if (index == 0) {
+      context.go('/home'); // Mağaza
+    } else if (index == 1) {
+      context.go('/my_esim'); // Simlerim
+    } else if (index == 2) {
+      context.go('/profile'); // Profil
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 16, 42, 63), // Arka plan rengini buraya ekledik
+      backgroundColor: const Color.fromARGB(255, 16, 42, 63),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 16, 42, 63), // AppBar rengini aynı yaptık
+        backgroundColor: const Color.fromARGB(255, 16, 42, 63),
         title: const Text('Home Screen'),
-        actions: [
-          // Sağ üst köşeye şeffaf bir "Giriş Yap" butonu ekliyoruz
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: TextButton(
-              onPressed: () {
-                // Burada giriş yap butonuna tıklandığında yapılacak işlemi ekleyebilirsiniz
-                print("Giriş Yap butonuna tıklandı");
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.transparent, // Arka planı şeffaf yapıyoruz
-                side: const BorderSide(color: Colors.white, width: 2), // Beyaz kenarlık ekliyoruz
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8), // Yuvarlatılmış köşeler
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // İç boşluk
-              ),
-              child: const Text(
-                'Giriş Yap',
-                style: TextStyle(fontSize: 16), // Yazı boyutu
-              ),
-            ),
-          ),
-        ],
       ),
       body: Center(
-        // Seçilen sekmeye göre içerik gösterme
         child: _selectedIndex == 0
             ? const Text('Mağaza', style: TextStyle(color: Colors.white, fontSize: 24))
             : _selectedIndex == 1
                 ? const Text('Simlerim', style: TextStyle(color: Colors.white, fontSize: 24))
                 : const Text('Profil', style: TextStyle(color: Colors.white, fontSize: 24)),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 16, 42, 63), // Aynı renk ile alt menü
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ), // Üst köşelerde yuvarlatma
-          boxShadow: const [
-            BoxShadow(
-              color: Color.fromARGB(100, 0, 0, 0), // Hafif gölge efekti
-              spreadRadius: 2,
-              blurRadius: 4,
-              offset: Offset(0, -2), // Alt menünün yukarı doğru hafif yükselmesini sağlıyor
-            ),
-          ],
-        ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.transparent, // Arka planı şeffaf yapıyoruz
-          selectedItemColor: Colors.white, // Seçili öğe rengi
-          unselectedItemColor: Colors.grey, // Seçili olmayan öğe rengi
-          currentIndex: _selectedIndex, // Seçilen sekme
-          onTap: _onItemTapped, // Sekmeye tıklandığında yapılacak işlem
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.store), // Mağaza ikonu
-              label: 'Mağaza',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.sim_card), // Simlerim ikonu
-              label: 'Simlerim',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle), // Profil ikonu
-              label: 'Profil',
-            ),
-          ],
-          // Tıklama efektini kaldırmak için
-          type: BottomNavigationBarType.fixed, // Tıklama animasyonunu kaldırmak için
-          elevation: 0, // Elevation'ı sıfırladık, tıklama efektini etkileyebilir
-        ),
+      bottomNavigationBar: BottomNavigationBarWidget(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
