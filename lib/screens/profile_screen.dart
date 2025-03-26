@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/bottom_navigation_bar.dart'; // Alt menü widget'ını ekleyin
+import '../widgets/bottom_navigation_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -11,9 +11,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 2; // Başlangıçta "Profil" seçili
+  int _selectedIndex = 2;
 
   void _onItemTapped(int index) {
+    if (_selectedIndex == index) return;
+
     setState(() {
       _selectedIndex = index;
     });
@@ -31,23 +33,96 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 16, 42, 63),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 16, 42, 63),
-        title: const Text(
-          'Profil',
-          style: TextStyle(
-            color: Colors.white, // Beyaz renk
-            fontSize: 22, // Font boyutu büyütüldü
-            fontWeight: FontWeight.bold, // Kalın yazı
-            letterSpacing: 1.2, // Harf aralığı artırıldı
+      body: Column(
+        children: [
+          // Üst Menü (Profil yazısı burada!)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 20, 50, 75),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black38,
+                  blurRadius: 5,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 90), // Profil yazısını aşağı kaydıran boşluk
+
+                // Profil başlığı
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Profil',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20), // Boşluk bırakmak için
+              ],
+            ),
           ),
-        ),
-      ),
-      body: const Center(
-        child: Text(
-          'Profil Ekranı',
-          style: TextStyle(color: Colors.white, fontSize: 24),
-        ),
+
+          // Giriş Yap / Kaydol Butonu
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical:100), // Yukarıdaki boşluk burada artırıldı
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2E3A46), // Buton arka plan rengi
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              onPressed: () {
+                // Giriş yap veya kaydol işlemi yapılacak
+                print('Giriş Yap / Kaydol tıklandı');
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // "Giriş Yap / Kaydol" Yazısı
+                  const Text(
+                    'Giriş Yap / Kaydol',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+
+                  // Profil İkonu (Sağda)
+                  const Icon(
+                    Icons.account_circle,
+                    color: Colors.white,
+                    size: 80,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Sayfa içeriği
+          Expanded(
+            child: Center(
+              child: Text(
+                '',
+                style: TextStyle(color: Colors.white, fontSize: 24),
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
         selectedIndex: _selectedIndex,
