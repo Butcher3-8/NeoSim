@@ -23,3 +23,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+   - assets/images/
+   - assets/images/rarrow.png
+   - assets/images/larrowww.png
+   - assets/icons/
+   - assets/languages/
+   - assets/motions/loading.json

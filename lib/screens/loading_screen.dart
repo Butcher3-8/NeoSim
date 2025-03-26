@@ -14,11 +14,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
 
-    // 1.5 saniye sonra '/home' rotasına yönlendirme
+    // 9 saniye sonra '/home' rotasına yönlendirme
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 1000), () {
+      Future.delayed(const Duration(milliseconds: 2000), () {
         if (mounted) {
-          context.go('/home'); // GoRouter ile yönlendirme
+          context.go('/home'); 
         }
       });
     });
@@ -27,25 +27,40 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 16, 42, 63),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center, 
           children: [
-            // Lottie animasyonu (Büyütüldü)
+           
             SizedBox(
-              width: 500,
-              height: 500,
+              width: 300,
+              height: 300, 
               child: Lottie.asset(
-                'assets/motions/logo.json', // Lottie dosya yolu
+                'assets/motions/loading.json', 
                 fit: BoxFit.contain,
               ),
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 40), 
 
-            // Yükleniyor yazısı
-        
+           
+            const Text(
+              "NEO SIM",
+              style: TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(221, 255, 255, 255),
+                letterSpacing: 2.0,
+              ),
+              textAlign: TextAlign.center, 
+            ),
+
+          
+            Padding(
+              padding: const EdgeInsets.only(bottom: 200.0), 
+            ),
           ],
         ),
       ),
