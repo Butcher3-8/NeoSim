@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
-import 'package:go_router/go_router.dart';
+import 'package:go_router/go_router.dart'; // GoRouter'ı import etmeyi unutmayın
 import '../widgets/bottom_navigation_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           // Giriş Yap / Kaydol Butonu
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical:100), // Yukarıdaki boşluk burada artırıldı
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 100), // Yukarıdaki boşluk burada artırıldı
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 45, 45, 45), // Buton arka plan rengi
@@ -88,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               onPressed: () {
                 // Giriş yap veya kaydol işlemi yapılacak
-                print('Giriş Yap / Kaydol tıklandı');
+                context.go('/login'); // Login ekranına git
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

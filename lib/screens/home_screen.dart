@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
+  bool isLocalSelected = true;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
@@ -27,6 +28,8 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     {'name': 'Kuzey Kıbrıs Türk Cumhuriyeti', 'image': 'assets/flags/northern-cyprus.png'},
     {'name': 'Kuzey Makedonya', 'image': 'assets/flags/republic-of-macedonia.png'},
 
+   
+    
   ];
 
   @override
@@ -113,22 +116,39 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 ),
                 const SizedBox(height: 16),
 
-                // En Çok Tercih Edilenler Başlığı
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(
-                      'En Çok Tercih Edilenler',
-                      style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+                // Arama Çubuğu
+                Container(
+                  height: 45,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "150'den fazla ülkede hızlı veri kullanımı...",
+                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.only(left: 10, top: 10),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-
+          
           const SizedBox(height: 16),
+
+          // En Çok Tercih Edilenler Başlığı
+Align(
+  alignment: Alignment.centerLeft,
+  child: Padding(
+    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+    child: Text(
+      'En Çok Tercih Edilenler',
+      style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+    ),
+  ),
+),
 
           // Ülke Butonları
           Expanded(

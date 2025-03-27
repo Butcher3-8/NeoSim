@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/core/routes.dart';
-
+import 'package:go_router/go_router.dart'; // GoRouter import edilmesi gerekiyor
+import 'core/routes.dart';  // Burada routes.dart dosyanızı doğru şekilde import ettiğinizden emin olun
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();  // Flutter widget'larını başlat
   runApp(const MyApp());
-}
-
-class WidgetsFlutterBinding {
-  static void ensureInitialized() {}
 }
 
 class MyApp extends StatelessWidget {
@@ -22,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      routerConfig: router,  // go_router yapılandırmamızı kullan
+      routerConfig: router,  // GoRouter yapılandırmasını buraya bağladık
       debugShowCheckedModeBanner: false,  // Debug bandını kaldır
     );
   }
