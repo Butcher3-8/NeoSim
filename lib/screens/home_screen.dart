@@ -12,9 +12,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
-  bool isLocalSelected = true;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+
+  // En Çok Tercih Edilen Ülkeler Listesi
+  final List<Map<String, String>> popularEsims = [
+    {'name': 'Almanya', 'image': 'assets/flags/germany.png'},
+    {'name': 'Birleşik Krallık', 'image': 'assets/flags/united-kingdom.png'},
+    {'name': 'Türkiye', 'image': 'assets/flags/turkey.png'},
+    {'name': 'Arnavutluk', 'image': 'assets/flags/albania.png'},
+    {'name': 'İspanya', 'image': 'assets/flags/spain.png'},
+    {'name': 'Fransa', 'image': 'assets/flags/france.png'},
+    {'name': 'İtalya', 'image': 'assets/flags/italy.png'},
+    {'name': 'Kuzey Kıbrıs Türk Cumhuriyeti', 'image': 'assets/flags/northern-cyprus.png'},
+    {'name': 'Kuzey Makedonya', 'image': 'assets/flags/republic-of-macedonia.png'},
+
+  ];
 
   @override
   void initState() {
@@ -22,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
-      lowerBound: 0.9, // Küçükten büyüğe animasyon
+      lowerBound: 0.9,
       upperBound: 1.0,
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(_controller);
@@ -43,27 +56,17 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     }
   }
 
-  void _toggleEsim(bool isLocal) {
-    if (isLocalSelected == isLocal) return; // Aynı butona tıklanırsa işlem yapma
-
-    setState(() {
-      isLocalSelected = isLocal;
-    });
-
-    _controller.forward().then((_) => _controller.reverse()); // Scale animasyonu başlat
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 16, 42, 63),
+      backgroundColor: const Color.fromARGB(255, 28, 28, 28),
       body: Column(
         children: [
           // Üst Menü
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 20, 50, 75),
+              color: Color.fromARGB(255, 45, 45, 45),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16),
@@ -78,7 +81,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             ),
             child: Column(
               children: [
-                // Hoşgeldiniz + Giriş Yap
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -92,9 +94,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                       ),
                     ),
                     TextButton(
-                      onPressed: () {
-                        print("Giriş Yap butonuna tıklandı");
-                      },
+                      onPressed: () {},
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.transparent,
@@ -111,80 +111,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 16),
 
-                // Arama Çubuğu
-                Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "Ara...",
-                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.only(left: 10, top: 10),
+                // En Çok Tercih Edilenler Başlığı
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: Text(
+                      'En Çok Tercih Edilenler',
+                      style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // eSIM Butonları (Scale Animasyon Eklenmiş)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => _toggleEsim(true),
-                        child: ScaleTransition(
-                          scale: isLocalSelected ? _scaleAnimation : const AlwaysStoppedAnimation(1.0),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 50),
-                            curve: Curves.easeInOut,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: isLocalSelected ? const Color.fromRGBO(88, 24, 16, 1) : Colors.grey[700],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Yerel eSIM'ler",
-                                style: TextStyle(fontSize: 16, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () => _toggleEsim(false),
-                        child: ScaleTransition(
-                          scale: !isLocalSelected ? _scaleAnimation : const AlwaysStoppedAnimation(1.0),
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: !isLocalSelected ? const Color.fromRGBO(88, 24, 16, 1) : Colors.grey[700],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                "Global eSIM'ler",
-                                style: TextStyle(fontSize: 16, color: Colors.white),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
@@ -192,39 +130,48 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
 
           const SizedBox(height: 16),
 
-          // Sayfa İçeriği (Yerel veya Global eSIM)
+          // Ülke Butonları
           Expanded(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: SlideTransition(
-                    position: Tween<Offset>(
-                      begin: const Offset(0.0, 0.1),
-                      end: Offset.zero,
-                    ).animate(animation),
-                    child: child,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: popularEsims.length,
+              itemBuilder: (context, index) {
+                final country = popularEsims[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 45, 45, 45),
+                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () {
+                      print("${country['name']} eSIM alındı");
+                    },
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          country['image']!,
+                          width: 32,
+                          height: 32,
+                          fit: BoxFit.contain,
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          country['name']!,
+                          style: const TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
-              child: isLocalSelected
-                  ? const Text(
-                      'Yerel eSIM İçeriği',
-                      key: ValueKey(1),
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    )
-                  : const Text(
-                      'Global eSIM İçeriği',
-                      key: ValueKey(2),
-                      style: TextStyle(color: Colors.white, fontSize: 24),
-                    ),
             ),
           ),
         ],
       ),
-
-      // Alt Menü
       bottomNavigationBar: BottomNavigationBarWidget(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,

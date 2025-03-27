@@ -32,14 +32,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 16, 42, 63),
+      backgroundColor: const Color.fromARGB(255, 28, 28, 28),
       body: Column(
         children: [
           // Üst Menü (Profil yazısı burada!)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 20, 50, 75),
+              color: Color.fromARGB(255, 45, 45, 45),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16),
@@ -80,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical:100), // Yukarıdaki boşluk burada artırıldı
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2E3A46), // Buton arka plan rengi
+                backgroundColor: const Color.fromARGB(255, 45, 45, 45), // Buton arka plan rengi
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

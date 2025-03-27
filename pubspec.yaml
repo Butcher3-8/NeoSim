@@ -30,3 +30,4 @@ flutter:
    - assets/icons/
    - assets/languages/
    - assets/motions/loading.json
+   - assets/flags/

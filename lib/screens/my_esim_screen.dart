@@ -30,48 +30,62 @@ class _MyEsimScreenState extends State<MyEsimScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 16, 42, 63),
-       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 16, 42, 63), // AppBar rengini aynı yaptık
-        title: const Text(
-          'E-Simlerim',
-          style: TextStyle(
-            color: Colors.white, // Beyaz renk
-            fontSize: 22, // Font boyutu büyütüldü
-            fontWeight: FontWeight.bold, // Kalın yazı
-            letterSpacing: 1.2, // Harf aralığı artırıldı
-          ),
-        ),
-        actions: [
-          // Sağ üst köşeye şeffaf bir "Giriş Yap" butonu ekliyoruz
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: TextButton(
-              onPressed: () {
-                // Burada giriş yap butonuna tıklandığında yapılacak işlemi ekleyebilirsiniz
-                print("Giriş Yap butonuna tıklandı");
-              },
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.white, backgroundColor: Colors.transparent, // Arka planı şeffaf yapıyoruz
-                side: const BorderSide(color: Colors.white, width: 2), // Beyaz kenarlık ekliyoruz
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8), // Yuvarlatılmış köşeler
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // İç boşluk
+      backgroundColor: const Color.fromARGB(255, 28, 28, 28),
+      body: Column(
+        children: [
+          // Üst Menü (E-SIMlerim başlığı burada)
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 45, 45, 45),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(16),
+                bottomRight: Radius.circular(16),
               ),
-              child: const Text(
-                'Giriş Yap',
-                style: TextStyle(fontSize: 16), // Yazı boyutu
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black38,
+                  blurRadius: 5,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 90), // Boşluk bırakıldı
+
+                // "E-SIMlerim" Başlığı
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'E-SIMlerim',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20), // Boşluk bırakmak için
+              ],
+            ),
+          ),
+
+          // Giriş Yap / Kaydol Butonu
+
+
+          // Sayfa içeriği
+          Expanded(
+            child: Center(
+              child: Text(
+                '',
+                style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
           ),
         ],
-      ),
-      body: const Center(
-        child: Text(
-          'Simlerim Ekranı',
-          style: TextStyle(color: Colors.white, fontSize: 24),
-        ),
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
         selectedIndex: _selectedIndex,
