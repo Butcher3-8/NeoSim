@@ -25,9 +25,8 @@ flutter:
   uses-material-design: true
   assets:
    - assets/images/
-   - assets/images/rarrow.png
-   - assets/images/larrowww.png
    - assets/icons/
+   - assets/icons/logosimm.png
    - assets/languages/
    - assets/motions/loading.json
    - assets/flags/

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
-import 'package:go_router/go_router.dart'; // GoRouter'ı import etmeyi unutmayın
+import 'package:go_router/go_router.dart';
 import '../widgets/bottom_navigation_bar.dart';
+import '../helpers/storage_helper.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,6 +13,20 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   int _selectedIndex = 2;
+  String? userName;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    Map<String, String>? userData = await StorageHelper.getCurrentUser();
+    setState(() {
+      userName = userData?['username']; // Kullanıcı adını al
+    });
+  }
 
   void _onItemTapped(int index) {
     if (_selectedIndex == index) return;
@@ -35,7 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: const Color.fromARGB(255, 28, 28, 28),
       body: Column(
         children: [
-          // Üst Menü (Profil yazısı burada!)
+          // Üst Menü (Profil başlığı)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             decoration: const BoxDecoration(
@@ -54,9 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             child: Column(
               children: [
-                const SizedBox(height: 90), // Profil yazısını aşağı kaydıran boşluk
-
-                // Profil başlığı
+                const SizedBox(height: 90),
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -69,51 +82,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 20), // Boşluk bırakmak için
+                const SizedBox(height: 20),
               ],
             ),
           ),
 
-          // Giriş Yap / Kaydol Butonu
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 100), // Yukarıdaki boşluk burada artırıldı
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 45, 45, 45), // Buton arka plan rengi
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              onPressed: () {
-                // Giriş yap veya kaydol işlemi yapılacak
-                context.go('/login'); // Login ekranına git
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // "Giriş Yap / Kaydol" Yazısı
-                  const Text(
-                    'Giriş Yap / Kaydol',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
+          // Kullanıcı giriş yapmışsa profil bilgilerini göster, değilse giriş yap/kaydol butonunu göster
+          userName == null ? _buildLoginButton() : _buildUserProfile(),
 
-                  // Profil İkonu (Sağda)
-                  const Icon(
-                    Icons.account_circle,
-                    color: Colors.white,
-                    size: 80,
-                  ),
+          // Ayarlar Bloğu
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 45, 45, 45),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                children: [
+                  _buildSettingsButton('Dil', () {}),
+                  _buildDivider(),
+                  _buildSettingsButton('Para Birimi', () {}),
+                  _buildDivider(),
+                  _buildSettingsButton('Neo Sım\'e ulaşın', () {}),
+                  _buildDivider(),
+                  _buildSettingsButton('Yardım Merkezi', () {}),
                 ],
               ),
             ),
           ),
 
-          // Sayfa içeriği
           Expanded(
             child: Center(
               child: Text(
@@ -129,5 +127,120 @@ class _ProfileScreenState extends State<ProfileScreen> {
         onItemTapped: _onItemTapped,
       ),
     );
+  }
+
+  // Kullanıcı giriş yapmamışsa gösterilecek buton
+  Widget _buildLoginButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 45, 45, 45),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        onPressed: () {
+          context.go('/login');
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Giriş Yap / Kaydol',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+              ),
+            ),
+            const Icon(
+              Icons.account_circle,
+              color: Colors.white,
+              size: 80,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Kullanıcı giriş yapmışsa gösterilecek profil bilgileri ve butonlar
+  Widget _buildUserProfile() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 45, 45, 45),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  userName!,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Icon(Icons.account_circle, color: Colors.white, size: 80),
+              ],
+            ),
+            const SizedBox(height: 20),
+            _buildSettingsButton("Hesap Bilgileri", () {}),
+            _buildDivider(),
+            _buildSettingsButton("Kayıtlı Kartlarım", () {}),
+            _buildDivider(),
+            _buildSettingsButton("Arkadaşlarını Davet Et ve Kazan", () {}),
+            _buildDivider(),
+            _buildSettingsButton("Siparişler", () {}),
+            const SizedBox(height: 10),
+            _buildLogoutButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Çıkış yapma butonu
+  Widget _buildLogoutButton() {
+    return Center(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        onPressed: () async {
+          await StorageHelper.logoutUser();
+          setState(() {
+            userName = null;
+          });
+        },
+        child: const Text("Çıkış Yap", style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+
+  Widget _buildSettingsButton(String title, VoidCallback onTap) {
+    return ListTile(
+      title: Text(
+        title,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildDivider() {
+    return const Divider(color: Colors.white30, height: 1, thickness: 0.5);
   }
 }
