@@ -4,10 +4,10 @@ import '../screens/loading_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
 import '../screens/my_esim_screen.dart';
-import '../screens/login_screen.dart'; // Login ekranını ekledik
+import '../screens/login_screen.dart';
 
 // Router yapılandırması
-final router = GoRouter(
+final GoRouter router = GoRouter(
   initialLocation: '/', 
   routes: [
     GoRoute(
@@ -28,7 +28,7 @@ final router = GoRouter(
     ),
     GoRoute(
       path: '/login',
-      builder: (context, state) => const LoginScreen(), // Login ekranı rotaya eklendi
+      builder: (context, state) => LoginScreen(), // StatefulWidget olduğu için const eklenmedi
     ),
   ],
 );

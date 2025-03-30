@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/bottom_navigation_bar.dart';
 import '../helpers/storage_helper.dart';
+
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -12,7 +12,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  int _selectedIndex = 2;
   String? userName;
 
   @override
@@ -21,28 +20,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserData();
   }
 
-  Future<void> _loadUserData() async {
-    Map<String, String>? userData = await StorageHelper.getCurrentUser();
+Future<void> _loadUserData() async {
+  try {
+    String? email = await StorageHelper.getCurrentUser();
     setState(() {
-      userName = userData?['username']; // Kullanıcı adını al
+      userName = email; // Kullanıcı adı olarak email göster
     });
+  } catch (e) {
+    print("Hata oluştu: $e");
   }
-
-  void _onItemTapped(int index) {
-    if (_selectedIndex == index) return;
-
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    if (index == 0) {
-      context.go('/home');
-    } else if (index == 1) {
-      context.go('/my_esim');
-    } else if (index == 2) {
-      context.go('/profile');
-    }
-  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -50,86 +37,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: const Color.fromARGB(255, 28, 28, 28),
       body: Column(
         children: [
-          // Üst Menü (Profil başlığı)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 45, 45, 45),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(16),
-                bottomRight: Radius.circular(16),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black38,
-                  blurRadius: 5,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                const SizedBox(height: 90),
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Profil',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          ),
-
-          // Kullanıcı giriş yapmışsa profil bilgilerini göster, değilse giriş yap/kaydol butonunu göster
+          _buildProfileHeader(),
           userName == null ? _buildLoginButton() : _buildUserProfile(),
-
-          // Ayarlar Bloğu
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Container(
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 45, 45, 45),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                children: [
-                  _buildSettingsButton('Dil', () {}),
-                  _buildDivider(),
-                  _buildSettingsButton('Para Birimi', () {}),
-                  _buildDivider(),
-                  _buildSettingsButton('Neo Sım\'e ulaşın', () {}),
-                  _buildDivider(),
-                  _buildSettingsButton('Yardım Merkezi', () {}),
-                ],
-              ),
-            ),
-          ),
-
-          Expanded(
-            child: Center(
-              child: Text(
-                '',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-          ),
+          _buildSettingsSection(),
+          const Spacer(),
         ],
-      ),
-      bottomNavigationBar: BottomNavigationBarWidget(
-        selectedIndex: _selectedIndex,
-        onItemTapped: _onItemTapped,
       ),
     );
   }
 
-  // Kullanıcı giriş yapmamışsa gösterilecek buton
+  Widget _buildProfileHeader() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 45, 45, 45),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(16),
+          bottomRight: Radius.circular(16),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black38,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const Column(
+        children: [
+          SizedBox(height: 90),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Profil',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
   Widget _buildLoginButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -165,7 +119,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Kullanıcı giriş yapmışsa gösterilecek profil bilgileri ve butonlar
   Widget _buildUserProfile() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -207,7 +160,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Çıkış yapma butonu
   Widget _buildLogoutButton() {
     return Center(
       child: ElevatedButton(
@@ -223,8 +175,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
           setState(() {
             userName = null;
           });
+          context.go('/login');
         },
         child: const Text("Çıkış Yap", style: TextStyle(color: Colors.white)),
+      ),
+    );
+  }
+
+  Widget _buildSettingsSection() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 45, 45, 45),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          children: [
+            _buildSettingsButton('Dil', () {}),
+            _buildDivider(),
+            _buildSettingsButton('Para Birimi', () {}),
+            _buildDivider(),
+            _buildSettingsButton('Neo Sım\'e ulaşın', () {}),
+            _buildDivider(),
+            _buildSettingsButton('Yardım Merkezi', () {}),
+          ],
+        ),
       ),
     );
   }

@@ -1,60 +1,57 @@
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageHelper {
+  static const String _usersKey = 'users';
+  static const String _loggedInUserKey = 'loggedInUser';
+
+  // Kullanıcıyı kaydet
   static Future<void> saveUser(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
     
-    // Önce var olan kullanıcıları al
-    String? usersJson = prefs.getString('users');
-    List<Map<String, String>> users = usersJson != null
-        ? List<Map<String, String>>.from(jsonDecode(usersJson))
-        : [];
-
-    // Aynı e-posta ile kayıtlı kullanıcı var mı kontrol et
-    bool userExists = users.any((user) => user['email'] == email);
-    if (!userExists) {
-      users.add({'email': email, 'password': password});
-      await prefs.setString('users', jsonEncode(users));
+    // Mevcut kullanıcıları al
+    Map<String, String> users = {};
+    if (prefs.containsKey(_usersKey)) {
+      users = Map<String, String>.from(jsonDecode(prefs.getString(_usersKey)!));
     }
+    
+    // Kullanıcıyı ekle
+    users[email] = password;
+    
+    // Güncellenmiş kullanıcıları kaydet
+    await prefs.setString(_usersKey, jsonEncode(users));
   }
 
-  static Future<bool> loginUser(String email, String password) async {
+  // Kullanıcıyı giriş yaptır
+  static Future<Map<String, String>?> loginUser(String email, String password) async {
     final prefs = await SharedPreferences.getInstance();
-    String? usersJson = prefs.getString('users');
 
-    if (usersJson != null) {
-      List<Map<String, String>> users = List<Map<String, String>>.from(jsonDecode(usersJson));
-      
-      // Kullanıcı bilgilerini kontrol et
-      for (var user in users) {
-        if (user['email'] == email && user['password'] == password) {
-          await prefs.setString('currentUser', email); // Giriş yapanı sakla
-          return true;
-        }
-      }
+    if (!prefs.containsKey(_usersKey)) return null;
+
+    Map<String, String> users = Map<String, String>.from(jsonDecode(prefs.getString(_usersKey)!));
+
+    if (users.containsKey(email) && users[email] == password) {
+      return {'email': email, 'password': password}; // Başarılı giriş
     }
-    return false;
+    
+    return null; // Kullanıcı bulunamadı
   }
 
+  // Şu anki giriş yapan kullanıcıyı al
+  static Future<String?> getCurrentUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_loggedInUserKey);
+  }
+
+  // Kullanıcıyı girişte sakla
+  static Future<void> setCurrentUser(String email) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_loggedInUserKey, email);
+  }
+
+  // Çıkış işlemi
   static Future<void> logoutUser() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('currentUser'); // Sadece oturumu kapat, kullanıcıları silme!
+    await prefs.remove(_loggedInUserKey);
   }
-
-  static Future<Map<String, String>?> getCurrentUser() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('currentUser');
-    String? usersJson = prefs.getString('users');
-
-    if (email != null && usersJson != null) {
-      List<Map<String, String>> users = List<Map<String, String>>.from(jsonDecode(usersJson));
-      return users.firstWhere((user) => user['email'] == email, orElse: () => {});
-    }
-    return null;
-  }
-
-  static getUser() {}
-
-  static clearUser() {}
 }
