@@ -12,7 +12,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   String? userName;
   int _selectedIndex = 1; // Bottom navigation için seçili index (Profil sekmesi)
-  
+
   @override
   void initState() {
     super.initState();
@@ -26,7 +26,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (index == 0) {
       context.go('/home');
     } else if (index == 2) {
-      
+
     } else if (index == 1) {
       context.go('/profile');
     }
@@ -47,13 +47,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 28, 28, 28),
-      body: Column(
-        children: [
-          _buildProfileHeader(),
-          userName == null ? _buildLoginButton() : _buildUserProfile(),
-          _buildSettingsSection(),
-          const Spacer(),
-        ],
+      body: SingleChildScrollView( // Ekran kaydırılabilir hale getirildi
+        child: Column(
+          children: [
+            _buildProfileHeader(),
+            userName == null ? _buildLoginButton() : _buildUserProfile(),
+            _buildSettingsSection(),
+            const SizedBox(height: 100), // Bu kısımdaki boşluğu ihtiyaca göre ayarlayabilirsiniz
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
         selectedIndex: _selectedIndex,
@@ -236,3 +238,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return const Divider(color: Colors.white30, height: 1, thickness: 0.5);
   }
 }
+
