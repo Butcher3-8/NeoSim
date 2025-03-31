@@ -41,10 +41,6 @@ class BottomNavigationBarWidget extends StatelessWidget {
             label: 'Mağaza',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.sim_card),
-            label: 'Simlerim',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.account_circle),
             label: 'Profil',
           ),

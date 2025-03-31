@@ -5,6 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
+  final String previousRoute; // Hangi sayfadan geldiğini takip etmek için
+
+  LoginScreen({this.previousRoute = '/home'}); // Varsayılan olarak home sayfası
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -172,10 +176,22 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
+
+                     Align(
+                    alignment: Alignment.topLeft,
+                    child: IconButton(
+                      icon: Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () {
+                        context.go(widget.previousRoute); // Önceki sayfaya dön
+                      },
+                    ),
+                  ),
+
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          
                           // Logo
                           Center(
                             child: Image.asset(

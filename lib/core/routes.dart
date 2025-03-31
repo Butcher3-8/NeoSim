@@ -22,10 +22,7 @@ final GoRouter router = GoRouter(
       path: '/profile',
       builder: (context, state) => const ProfileScreen(),
     ),
-    GoRoute(
-      path: '/my_esim',
-      builder: (context, state) => const MyEsimScreen(),
-    ),
+
     GoRoute(
       path: '/login',
       builder: (context, state) => LoginScreen(), // StatefulWidget olduğu için const eklenmedi

@@ -1,35 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
 import '../helpers/storage_helper.dart';
 
-
-
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
-
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String? userName;
-
+  int _selectedIndex = 1; // Bottom navigation için seçili index (Profil sekmesi)
+  
   @override
   void initState() {
     super.initState();
     _loadUserData();
   }
 
-Future<void> _loadUserData() async {
-  try {
-    String? email = await StorageHelper.getCurrentUser();
+  void _onItemTapped(int index) {
     setState(() {
-      userName = email; // Kullanıcı adı olarak email göster
+      _selectedIndex = index;
     });
-  } catch (e) {
-    print("Hata oluştu: $e");
+    if (index == 0) {
+      context.go('/home');
+    } else if (index == 2) {
+      
+    } else if (index == 1) {
+      context.go('/profile');
+    }
   }
-}
+
+  Future<void> _loadUserData() async {
+    try {
+      String? email = await StorageHelper.getCurrentUser();
+      setState(() {
+        userName = email; // Kullanıcı adı olarak email göster
+      });
+    } catch (e) {
+      print("Hata oluştu: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +54,10 @@ Future<void> _loadUserData() async {
           _buildSettingsSection(),
           const Spacer(),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBarWidget(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
     );
   }
@@ -149,9 +165,9 @@ Future<void> _loadUserData() async {
             _buildDivider(),
             _buildSettingsButton("Kayıtlı Kartlarım", () {}),
             _buildDivider(),
-            _buildSettingsButton("Arkadaşlarını Davet Et ve Kazan", () {}),
+            _buildSettingsButton("Aktif Simlerim", () {}),
             _buildDivider(),
-            _buildSettingsButton("Siparişler", () {}),
+            _buildSettingsButton("Önceki Simlerim", () {}),
             const SizedBox(height: 10),
             _buildLogoutButton(),
           ],

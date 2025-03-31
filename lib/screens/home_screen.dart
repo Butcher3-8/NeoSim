@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
 import '../widgets/bottom_navigation_bar.dart';
+import '../helpers/storage_helper.dart'; // StorageHelper'ı import ettiğinizden emin olun
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   bool isLocalSelected = true;
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  String? userName; // Kullanıcı adını saklayacak değişken
 
   // En Çok Tercih Edilen Ülkeler Listesi
   final List<Map<String, String>> popularEsims = [
@@ -25,11 +27,12 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     {'name': 'İspanya', 'image': 'assets/flags/spain.png'},
     {'name': 'Fransa', 'image': 'assets/flags/france.png'},
     {'name': 'İtalya', 'image': 'assets/flags/italy.png'},
-    {'name': 'Kuzey Kıbrıs Türk Cumhuriyeti', 'image': 'assets/flags/northern-cyprus.png'},
-    {'name': 'Kuzey Makedonya', 'image': 'assets/flags/republic-of-macedonia.png'},
-
+    {'name': 'Kıbrıs Türk Cumhuriyeti', 'image': 'assets/flags/northern-cyprus.png'},
+    {'name': 'Kanada', 'image': 'assets/flags/canada.png'},
+    {'name': 'Rusya', 'image': 'assets/flags/russia.png'},
+    {'name': 'Kosova', 'image': 'assets/flags/kosovo.png'},
+    {'name': 'Mısır', 'image': 'assets/flags/egypt.png'},
    
-    
   ];
 
   @override
@@ -42,6 +45,18 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
       upperBound: 1.0,
     );
     _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(_controller);
+    _loadUserData(); // Kullanıcı verisini yükle
+  }
+
+  Future<void> _loadUserData() async {
+    try {
+      String? email = await StorageHelper.getCurrentUser();
+      setState(() {
+        userName = email; // Kullanıcı adı olarak email göster
+      });
+    } catch (e) {
+      print("Hata oluştu: $e");
+    }
   }
 
   void _onItemTapped(int index) {
@@ -53,8 +68,6 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     if (index == 0) {
       context.go('/home');
     } else if (index == 1) {
-      context.go('/my_esim');
-    } else if (index == 2) {
       context.go('/profile');
     }
   }
@@ -96,22 +109,36 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                         letterSpacing: 1.2,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {},
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: Colors.transparent,
-                        side: const BorderSide(color: Colors.white, width: 2),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
-                      ),
-                      child: const Text(
-                        'Giriş Yap',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
+                    // Kullanıcı durumuna göre buton veya profil bilgisi göster
+                    userName == null
+                        ? TextButton(
+                            onPressed: () {
+                              context.go('/login');
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: Colors.transparent,
+                              side: const BorderSide(color: Colors.white, width: 2),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+                            ),
+                            child: const Text(
+                              'Giriş Yap',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          )
+                        : Row(
+                            children: [
+                              Text(
+                                userName!.split('@')[0], // Email adresinin @ işaretinden önceki kısmını göster
+                                style: const TextStyle(color: Colors.white, fontSize: 16),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.account_circle, color: Colors.white, size: 24),
+                            ],
+                          ),
                   ],
                 ),
                 const SizedBox(height: 16),
@@ -139,13 +166,25 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           const SizedBox(height: 16),
 
           // En Çok Tercih Edilenler Başlığı
-Align(
-  alignment: Alignment.centerLeft,
-  child: Padding(
-    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-    child: Text(
-      'En Çok Tercih Edilenler',
-      style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              child: Text(
+                  'En Çok Tercih Edilenler',
+                style: TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.8,
+                shadows: [
+                Shadow(
+                offset: Offset(1, 1),
+                blurRadius: 3.0,
+                color: Colors.black38,
+          ),
+        ],
+      ),
     ),
   ),
 ),
@@ -174,8 +213,8 @@ Align(
                       children: [
                         Image.asset(
                           country['image']!,
-                          width: 32,
-                          height: 32,
+                          width: 50,
+                          height: 50,
                           fit: BoxFit.contain,
                         ),
                         const SizedBox(width: 12),
