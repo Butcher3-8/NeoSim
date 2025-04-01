@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/screens/search_county.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
 import '../helpers/storage_helper.dart';
+import '../screens/search_county.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +18,59 @@ class _HomeScreenState extends State<HomeScreen> {
   String? selectedCountry; // Seçili ülke
   String? selectedCountryImage; // Seçili ülkenin bayrak resmi
 
+  // Tüm ülkeler listesi (popüler + diğer tüm ülkeler)
+  final List<Map<String, String>> allCountries = [
+    {'name': 'Almanya', 'image': 'assets/flags/germany.png'},
+    {'name': 'Arnavutluk', 'image': 'assets/flags/albania.png'},
+    {'name': 'Amerika Birleşik Devletleri', 'image': 'assets/flags/united-states.png'},
+    {'name': 'Avustralya', 'image': 'assets/flags/australia.png'},
+  
+    {'name': 'Azerbaycan', 'image': 'assets/flags/azerbaijan.png'},
+    {'name': 'Belçika', 'image': 'assets/flags/belgium.png'},
+    {'name': 'Birleşik Arap Emirlikleri', 'image': 'assets/flags/united-arab-emirates.png'},
+    {'name': 'Birleşik Krallık', 'image': 'assets/flags/united-kingdom.png'},
+    {'name': 'Brezilya', 'image': 'assets/flags/brazil-.png'},
+    {'name': 'Bulgaristan', 'image': 'assets/flags/bulgaria.png'},
+    {'name': 'Çin', 'image': 'assets/flags/china.png'},
+    {'name': 'Danimarka', 'image': 'assets/flags/denmark.png'},
+    {'name': 'Endonezya', 'image': 'assets/flags/indonesia.png'},
+    {'name': 'Fas', 'image': 'assets/flags/morocco.png'},
+    {'name': 'Finlandiya', 'image': 'assets/flags/finland.png'},
+    {'name': 'Fransa', 'image': 'assets/flags/france (1).png'},
+  
+
+
+    {'name': 'Hollanda', 'image': 'assets/flags/netherlands.png'},
+    {'name': 'İspanya', 'image': 'assets/flags/spain.png'},
+
+    {'name': 'İsveç', 'image': 'assets/flags/sweden.png'},
+    {'name': 'İsviçre', 'image': 'assets/flags/switzerland.png'},
+    {'name': 'İtalya', 'image': 'assets/flags/italy.png'},
+    {'name': 'Japonya', 'image': 'assets/flags/japan.png'},
+    {'name': 'Kanada', 'image': 'assets/flags/canada.png'},
+    {'name': 'Katar', 'image': 'assets/flags/qatar.png'},
+    {'name': 'Kıbrıs Türk Cumhuriyeti', 'image': 'assets/flags/northern-cyprus.png'},
+    {'name': 'Kosova', 'image': 'assets/flags/kosovo.png'},
+    {'name': 'Macaristan', 'image': 'assets/flags/hungary.png'},
+   
+    {'name': 'Meksika', 'image': 'assets/flags/mexico.png'},
+    {'name': 'Mısır', 'image': 'assets/flags/egypt.png'},
+    {'name': 'Norveç', 'image': 'assets/flags/norway.png'},
+    {'name': 'Polonya', 'image': 'assets/flags/poland.png'},
+    {'name': 'Portekiz', 'image': 'assets/flags/portugal.png'},
+    {'name': 'Romanya', 'image': 'assets/flags/romania.png'},
+    {'name': 'Rusya', 'image': 'assets/flags/russia.png'},
+    {'name': 'Sırbistan', 'image': 'assets/flags/serbia.png'},
+    {'name': 'Singapur', 'image': 'assets/flags/singapore.png'},
+    {'name': 'Suudi Arabistan', 'image': 'assets/flags/saudi-arabia.png'},
+    {'name': 'Tayland', 'image': 'assets/flags/thailand.png'},
+    {'name': 'Türkiye', 'image': 'assets/flags/turkey.png'},
+    {'name': 'Ukrayna', 'image': 'assets/flags/ukraine.png'},
+    {'name': 'Yunanistan', 'image': 'assets/flags/greece.png'},
+  
+  ];
+
+  // Popüler ülkeler listesi (ana sayfada gösterilecek)
   final List<Map<String, String>> popularEsims = [
     {'name': 'Almanya', 'image': 'assets/flags/germany.png'},
     {'name': 'Birleşik Krallık', 'image': 'assets/flags/united-kingdom.png'},
@@ -101,6 +156,32 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // Ülke seçildiğinde çağrılacak fonksiyon
+  void _onCountrySelected(String country, String image) {
+    setState(() {
+      selectedCountry = country;
+      selectedCountryImage = image;
+    });
+  }
+
+  // Arama ekranına yönlendiren fonksiyon
+  void _navigateToSearch(BuildContext context) async {
+    await Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => SearchCountryScreen(
+          allCountries: allCountries,
+          onCountrySelected: _onCountrySelected,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,18 +262,25 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 // Eğer ülke seçili değilse arama çubuğu görünecek
                 if (selectedCountry == null)
-                  Container(
-                    height: 45,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "150'den fazla ülkede hızlı veri kullanımı...",
-                        prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.only(left: 10, top: 10),
+                  InkWell(
+                    onTap: () => _navigateToSearch(context),
+                    child: Container(
+                      height: 45,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Icon(Icons.search, color: Colors.grey),
+                          ),
+                          Text(
+                            "150'den fazla ülkede hızlı veri kullanımı...",
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
+                        ],
                       ),
                     ),
                   ),
