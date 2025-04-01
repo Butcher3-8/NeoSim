@@ -373,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Satın alma işlemi buraya gelecek
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 240, 95, 91),
+                          backgroundColor: const Color.fromARGB(255, 238, 13, 5),
                           foregroundColor: const Color.fromARGB(255, 247, 247, 247),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(

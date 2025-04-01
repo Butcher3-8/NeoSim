@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class StorageHelper {
   static const String _usersKey = 'users';
   static const String _loggedInUserKey = 'loggedInUser';
+  static const String _profilePhotoKey = 'profilePhoto_';
 
   // Kullanıcıyı kaydet
   static Future<void> saveUser(String email, String password) async {
@@ -53,5 +54,51 @@ class StorageHelper {
   static Future<void> logoutUser() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_loggedInUserKey);
+  }
+
+  // Profil fotoğrafı URL'sini al
+  static Future<String?> getUserProfilePhoto() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? email = await getCurrentUser();
+    
+    if (email == null) {
+      return null;
+    }
+    
+    // Her kullanıcı için benzersiz bir anahtar kullan
+    String photoKey = _profilePhotoKey + email;
+    return prefs.getString(photoKey);
+  }
+
+  // Profil fotoğrafını kaydet
+  // Not: Bu örnekte path doğrudan URL olarak kullanılıyor
+  // Gerçek uygulamada dosyayı yükleyip URL almak gerekecek
+  static Future<String?> saveProfilePhoto(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    String? email = await getCurrentUser();
+    
+    if (email == null) {
+      return null;
+    }
+    
+    // Her kullanıcı için benzersiz bir anahtar kullan
+    String photoKey = _profilePhotoKey + email;
+    await prefs.setString(photoKey, path);
+    
+    return path; // Gerçek uygulamada burada yüklenen fotoğrafın URL'si dönecek
+  }
+
+  // Profil fotoğrafını kaldır
+  static Future<void> removeProfilePhoto() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? email = await getCurrentUser();
+    
+    if (email == null) {
+      return;
+    }
+    
+    // Her kullanıcı için benzersiz bir anahtar kullan
+    String photoKey = _profilePhotoKey + email;
+    await prefs.remove(photoKey);
   }
 }
