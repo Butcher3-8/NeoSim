@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
-import '../widgets/bottom_navigation_bar.dart';
-import '../helpers/storage_helper.dart'; // StorageHelper'ı import ettiğinizden emin olun
+import '../helpers/storage_helper.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,14 +10,12 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  bool isLocalSelected = true;
-  late AnimationController _controller;
-  late Animation<double> _scaleAnimation;
-  String? userName; // Kullanıcı adını saklayacak değişken
+  String? userName;
+  String? selectedCountry; // Seçili ülke
+  String? selectedCountryImage; // Seçili ülkenin bayrak resmi
 
-  // En Çok Tercih Edilen Ülkeler Listesi
   final List<Map<String, String>> popularEsims = [
     {'name': 'Almanya', 'image': 'assets/flags/germany.png'},
     {'name': 'Birleşik Krallık', 'image': 'assets/flags/united-kingdom.png'},
@@ -32,27 +29,59 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     {'name': 'Rusya', 'image': 'assets/flags/russia.png'},
     {'name': 'Kosova', 'image': 'assets/flags/kosovo.png'},
     {'name': 'Mısır', 'image': 'assets/flags/egypt.png'},
-   
+  ];
+
+  // Plan bilgileri için liste
+  final List<Map<String, String>> planOptions = [
+    {
+      'name': 'Mini ',
+      'data': '1 GB',
+      'validity': '7 Gün',
+      'price': '\$4.50 USD'
+    },
+    {
+      'name': 'Standard ',
+      'data': '3 GB',
+      'validity': '15 Gün',
+      'price': '\$8.99 USD'
+    },
+    {
+      'name': 'Comfort',
+      'data': '5 GB',
+      'validity': '30 Gün',
+      'price': '\$12.50 USD'
+    },
+    {
+      'name': 'Premium ',
+      'data': '10 GB',
+      'validity': '30 Gün',
+      'price': '\$18.00 USD'
+    },
+    {
+      'name': 'Ultra ',
+      'data': '20 GB',
+      'validity': '30 Gün',
+      'price': '\$24.99 USD'
+    },
+    {
+      'name': 'Best ',
+      'data': '30 GB',
+      'validity': '30 Gün',
+      'price': '\$39.99 USD'
+    },
   ];
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-      lowerBound: 0.9,
-      upperBound: 1.0,
-    );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.05).animate(_controller);
-    _loadUserData(); // Kullanıcı verisini yükle
+    _loadUserData();
   }
 
   Future<void> _loadUserData() async {
     try {
       String? email = await StorageHelper.getCurrentUser();
       setState(() {
-        userName = email; // Kullanıcı adı olarak email göster
+        userName = email;
       });
     } catch (e) {
       print("Hata oluştu: $e");
@@ -87,153 +116,320 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black38,
-                  blurRadius: 5,
-                  offset: Offset(0, 2),
-                ),
-              ],
             ),
             child: Column(
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'Hoşgeldiniz',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                    // Kullanıcı durumuna göre buton veya profil bilgisi göster
-                    userName == null
-                        ? TextButton(
-                            onPressed: () {
-                              context.go('/login');
-                            },
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.transparent,
-                              side: const BorderSide(color: Colors.white, width: 2),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
+                    // Eğer ülke seçilmediyse sadece "Hoşgeldiniz" yazısı, 
+                    // seçildiyse ülke bayrağı ve ülke adı yanyana gösterilecek
+                    Row(
+                      children: [
+                        if (selectedCountry != null && selectedCountryImage != null)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12.0),
+                            child: Image.asset(
+                              selectedCountryImage!,
+                              width: 30,
+                              height: 30,
+                              fit: BoxFit.contain,
                             ),
-                            child: const Text(
-                              'Giriş Yap',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          )
-                        : Row(
-                            children: [
-                              Text(
-                                userName!.split('@')[0], // Email adresinin @ işaretinden önceki kısmını göster
-                                style: const TextStyle(color: Colors.white, fontSize: 16),
-                              ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.account_circle, color: Colors.white, size: 24),
-                            ],
                           ),
+                        Text(
+                          selectedCountry ?? 'Hoşgeldiniz',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Ülke seçili değilse ve kullanıcı giriş yapmışsa email bilgisini göster
+                    // Ülke seçiliyse veya kullanıcı giriş yapmamışsa giriş yap butonunu göster
+                    selectedCountry == null 
+                        ? (userName == null
+                            ? TextButton(
+                                onPressed: () {
+                                  context.go('/login');
+                                },
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.transparent,
+                                  side: const BorderSide(color: Colors.white, width: 2),
+                                ),
+                                child: const Text(
+                                  'Giriş Yap',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              )
+                            : Row(
+                                children: [
+                                  Text(
+                                    userName!.split('@')[0],
+                                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Icon(Icons.account_circle, color: Colors.white, size: 24),
+                                ],
+                              ))
+                        : Container(), // Ülke seçiliyse boş bir container göster
                   ],
                 ),
                 const SizedBox(height: 16),
 
-                // Arama Çubuğu
-                Container(
-                  height: 45,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: "150'den fazla ülkede hızlı veri kullanımı...",
-                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.only(left: 10, top: 10),
+                // Eğer ülke seçili değilse arama çubuğu görünecek
+                if (selectedCountry == null)
+                  Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: "150'den fazla ülkede hızlı veri kullanımı...",
+                        prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.only(left: 10, top: 10),
+                      ),
                     ),
                   ),
-                ),
               ],
             ),
           ),
-          
-          const SizedBox(height: 16),
 
-          // En Çok Tercih Edilenler Başlığı
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-              child: Text(
-                  'En Çok Tercih Edilenler',
-                style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 0.8,
-                shadows: [
-                Shadow(
-                offset: Offset(1, 1),
-                blurRadius: 3.0,
-                color: Colors.black38,
-          ),
-        ],
-      ),
-    ),
-  ),
-),
-
-          // Ülke Butonları
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: popularEsims.length,
-              itemBuilder: (context, index) {
-                final country = popularEsims[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 45, 45, 45),
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () {
-                      print("${country['name']} eSIM alındı");
-                    },
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          country['image']!,
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.contain,
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          country['name']!,
-                          style: const TextStyle(fontSize: 18, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+          // Geri Dön butonu - ülke seçiliyse göster
+          if (selectedCountry != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                  onPressed: () {
+                    setState(() {
+                      selectedCountry = null;
+                      selectedCountryImage = null;
+                    });
+                  },
+                ),
+              ),
             ),
+
+          const SizedBox(height: 8),
+
+          // Eğer ülke seçili değilse "En Çok Tercih Edilenler" başlığını göster
+          if (selectedCountry == null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+                child: Text(
+                  'En Çok Tercih Edilenler',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.8,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(1, 1),
+                        blurRadius: 3.0,
+                        color: Colors.black38,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+          // Eğer ülke seçiliyse detayları göster, değilse listeyi göster
+          Expanded(
+            child: selectedCountry == null ? _buildCountryList() : _buildCountryDetails(),
           ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBarWidget(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped,
+      ),
+    );
+  }
+
+  // Ülke listesi gösterimi
+  Widget _buildCountryList() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: popularEsims.length,
+      itemBuilder: (context, index) {
+        final country = popularEsims[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromARGB(255, 45, 45, 45),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () {
+              setState(() {
+                selectedCountry = country['name'];
+                selectedCountryImage = country['image'];
+              });
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  country['image']!,
+                  width: 50,
+                  height: 50,
+                  fit: BoxFit.contain,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  country['name']!,
+                  style: const TextStyle(fontSize: 18, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Seçili ülkenin detaylarını gösteren widget
+  Widget _buildCountryDetails() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: ListView.builder(
+        itemCount: planOptions.length,
+        itemBuilder: (context, index) {
+          final plan = planOptions[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 28, 92, 128), // Kırmızı arka plan
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  )
+                ],
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            plan['name'] ?? '',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        // Yeşil kart görseli (sağ tarafta)
+                        Container(
+                          width: 190,
+                          height: 115,
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 28, 92, 126),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Center(
+                            child: Image.asset(
+                              'assets/icons/detay1.png', // Yeşil SIM kartınızın yolunu buraya ekleyin
+                              width: 200,
+                              height: 190,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _buildDetailRow(Icons.language, 'KAPSAMA ALANI', selectedCountry ?? ''),
+                  _buildDetailRow(Icons.data_usage, 'VERİ', plan['data'] ?? ''),
+                  _buildDetailRow(Icons.calendar_today, 'GEÇERLİLİK', plan['validity'] ?? ''),
+                  _buildDetailRow(Icons.attach_money, 'FİYAT', plan['price'] ?? ''),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Satın alma işlemi buraya gelecek
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 240, 95, 91),
+                          foregroundColor: const Color.fromARGB(255, 247, 247, 247),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text(
+                          'HEMEN SATIN AL',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // Bu widget detay satırlarını oluşturmak için
+  Widget _buildDetailRow(IconData icon, String label, String value) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(color: Colors.white24, width: 1),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, color: Colors.white, size: 22),
+          const SizedBox(width: 16),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ],
       ),
     );
   }

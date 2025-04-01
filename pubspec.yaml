@@ -27,6 +27,7 @@ flutter:
    - assets/images/
    - assets/icons/
    - assets/icons/logosimm.png
+   - assets/icons/detay1.png
    - assets/languages/
    - assets/motions/loading.json
    - assets/flags/
