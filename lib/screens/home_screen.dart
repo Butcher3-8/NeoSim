@@ -342,15 +342,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         // Yeşil kart görseli (sağ tarafta)
                         Container(
-                          width: 190,
-                          height: 115,
+                          width: 150,
+                          height: 150,
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 28, 92, 126),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Center(
                             child: Image.asset(
-                              'assets/icons/detay1.png', // Yeşil SIM kartınızın yolunu buraya ekleyin
+                              'assets/icons/sımcard.png', // Yeşil SIM kartınızın yolunu buraya ekleyin
                               width: 200,
                               height: 190,
                               fit: BoxFit.contain,
