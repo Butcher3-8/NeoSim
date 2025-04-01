@@ -64,29 +64,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileHeader() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 45, 45, 45),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(16),
-          bottomRight: Radius.circular(16),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black38,
-            blurRadius: 5,
-            offset: Offset(0, 2),
-          ),
-        ],
+Widget _buildProfileHeader() {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+    decoration: const BoxDecoration(
+      color: Color.fromARGB(255, 45, 45, 45),
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(16),
+        bottomRight: Radius.circular(16),
       ),
-      child: const Column(
-        children: [
-          SizedBox(height: 90),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black38,
+          blurRadius: 5,
+          offset: Offset(0, 2),
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        const SizedBox(height: 90),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
               'Profil',
               style: TextStyle(
                 color: Colors.white,
@@ -95,12 +96,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 letterSpacing: 1.2,
               ),
             ),
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
+            userName != null
+                ? const Icon(
+                    Icons.account_circle,
+                    color: Colors.white,
+                    size: 100, // Boyutu değiştirebilirsin
+                  )
+                : const SizedBox(), // Kullanıcı giriş yapmamışsa ikon gösterme
+          ],
+        ),
+        const SizedBox(height: 20),
+      ],
+    ),
+  );
+}
+
 
   Widget _buildLoginButton() {
     return Padding(
@@ -159,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Icon(Icons.account_circle, color: Colors.white, size: 80),
+                
               ],
             ),
             const SizedBox(height: 20),
