@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../screens/loading_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/profile_screen.dart';
-import '../screens/my_esim_screen.dart';
+
 import '../screens/login_screen.dart';
 
 // Router yapılandırması
