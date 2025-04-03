@@ -20,6 +20,15 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/neo.png"  # Buraya ikon olarak kullanmak istediğin PNG dosyanın yolunu yaz
+  adaptive_icon_background: "#000000"  # Sadece Android için arka plan rengi (isteğe bağlı)
+  adaptive_icon_foreground: "assets/icons/neo.png" # Android için ön plan resmi (isteğe bağlı)
+
 
 flutter:
   uses-material-design: true

@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // Logo
                           Center(
                             child: Image.asset(
-                              'assets/icons/logosimm.png', // Logo dosyanızın yolu
+                              'assets/icons/neo.png', // Logo dosyanızın yolu
                               height: 250, // Logo yüksekliği
                               width: 400, // Logo genişliği
                             ),
