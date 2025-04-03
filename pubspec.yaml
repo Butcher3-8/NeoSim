@@ -25,9 +25,9 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icons/neo.png"  # Buraya ikon olarak kullanmak istediğin PNG dosyanın yolunu yaz
-  adaptive_icon_background: "#000000"  # Sadece Android için arka plan rengi (isteğe bağlı)
-  adaptive_icon_foreground: "assets/icons/neo.png" # Android için ön plan resmi (isteğe bağlı)
+  image_path: "assets/icons/logosimm.png"  # Buraya ikon olarak kullanmak istediğin PNG dosyanın yolunu yaz
+  adaptive_icon_background: "#FFFFFFFF"  # Sadece Android için arka plan rengi (isteğe bağlı)
+  adaptive_icon_foreground: "assets/icons/logosimm.png" # Android için ön plan resmi (isteğe bağlı)
 
 
 flutter:
