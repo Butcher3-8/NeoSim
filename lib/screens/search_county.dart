@@ -20,6 +20,7 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
   late Animation<double> _animation;
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, String>> _filteredCountries = [];
+  bool _hasSearched = false;
 
   @override
   void initState() {
@@ -33,7 +34,9 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
       curve: Curves.easeInOut,
     );
     _animationController.forward();
-    _filteredCountries = widget.allCountries;
+    
+    // Başlangıçta boş liste ile başlama
+    _filteredCountries = [];
 
     // Add listener to filter countries as user types
     _searchController.addListener(_filterCountries);
@@ -49,8 +52,10 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
   void _filterCountries() {
     String query = _searchController.text.toLowerCase();
     setState(() {
+      _hasSearched = true;
+      
       if (query.isEmpty) {
-        _filteredCountries = widget.allCountries;
+        _filteredCountries = [];
       } else {
         _filteredCountries = widget.allCountries
             .where((country) => country['name']!.toLowerCase().startsWith(query))
@@ -112,58 +117,65 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
                 ),
               ),
               
-              // Filtered Country List
+              // Mesaj veya Sonuç Listesi
               Expanded(
-                child: _filteredCountries.isEmpty
+                child: !_hasSearched
                     ? const Center(
                         child: Text(
-                          "Sonuç bulunamadı",
+                          "Ülke aramak için yukarıyı kullanın",
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       )
-                    : ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: _filteredCountries.length,
-                        itemBuilder: (context, index) {
-                          final country = _filteredCountries[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(255, 45, 45, 45),
-                                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              onPressed: () {
-                                widget.onCountrySelected(
-                                  country['name']!,
-                                  country['image']!,
-                                );
-                                _animationController.reverse().then((_) {
-                                  Navigator.pop(context);
-                                });
-                              },
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    country['image']!,
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.contain,
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Text(
-                                    country['name']!,
-                                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                                  ),
-                                ],
-                              ),
+                    : _filteredCountries.isEmpty
+                        ? const Center(
+                            child: Text(
+                              "",
+                              style: TextStyle(color: Colors.white, fontSize: 16),
                             ),
-                          );
-                        },
-                      ),
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: _filteredCountries.length,
+                            itemBuilder: (context, index) {
+                              final country = _filteredCountries[index];
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color.fromARGB(255, 45, 45, 45),
+                                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    widget.onCountrySelected(
+                                      country['name']!,
+                                      country['image']!,
+                                    );
+                                    _animationController.reverse().then((_) {
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        country['image']!,
+                                        width: 50,
+                                        height: 50,
+                                        fit: BoxFit.contain,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text(
+                                        country['name']!,
+                                        style: const TextStyle(fontSize: 18, color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
               ),
             ],
           ),
