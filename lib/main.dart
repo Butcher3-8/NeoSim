@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; // GoRouter import edilmesi gerekiyor
-import 'core/routes.dart';  // Burada routes.dart dosyanızı doğru şekilde import ettiğinizden emin olun
+import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'core/routes.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();  // Flutter widget'larını başlat
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+
+  runApp(
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('tr'), Locale('de')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -18,8 +28,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      routerConfig: router,  // GoRouter yapılandırmasını buraya bağladık
-      debugShowCheckedModeBanner: false,  // Debug bandını kaldır
+      locale: context.locale,
+      supportedLocales: context.supportedLocales,
+      localizationsDelegates: context.localizationDelegates,
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }

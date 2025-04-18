@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   cupertino_icons: ^1.0.8
+  easy_localization: ^3.0.7+1
   flutter:
     sdk: flutter
   flutter_secure_storage: ^9.2.4
@@ -40,3 +41,4 @@ flutter:
    - assets/languages/
    - assets/motions/loading.json
    - assets/flags/
+   - assets/translations/

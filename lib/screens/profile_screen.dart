@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
@@ -77,27 +78,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
  
   Future<void> _changeProfilePhoto() async {
-    
-    
     // FOTO DEĞİŞTİRME YERİ
-
-    
-  
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Profil fotoğrafı değiştirme işlemi başlatıldı')),
+      SnackBar(content: Text('profile_photo_change_started'.tr())),
     );
   }
 
   
   Future<void> _removeProfilePhoto() async {
-  
     await StorageHelper.removeProfilePhoto();
     setState(() {
       _profilePhotoUrl = null;
     });
     
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Profil fotoğrafı kaldırıldı')),
+      SnackBar(content: Text('profile_photo_removed'.tr())),
     );
   }
 
@@ -148,30 +143,150 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
 
-  Widget _buildCurrentContent() {
-    switch (_currentContent) {
-      case ProfileContent.profile:
-        return _buildUserProfile();
-      case ProfileContent.account:
-        return _buildContentPlaceholder("Hesap Bilgileri İçeriği");
-      case ProfileContent.cards:
-        return _buildContentPlaceholder("Kayıtlı Kartlarım İçeriği");
-      case ProfileContent.activeSims:
-        return _buildContentPlaceholder("Aktif Simlerim İçeriği");
-      case ProfileContent.pastSims:
-        return _buildContentPlaceholder("Önceki Simlerim İçeriği");
-      case ProfileContent.language:
-        return _buildContentPlaceholder("Dil Ayarları İçeriği");
-      case ProfileContent.currency:
-        return _buildContentPlaceholder("Para Birimi İçeriği");
-      case ProfileContent.contact:
-        return _buildContentPlaceholder("Neo Sım'e Ulaşın İçeriği");
-      case ProfileContent.help:
-        return _buildContentPlaceholder("Yardım Merkezi İçeriği");
-      default:
-        return _buildUserProfile();
-    }
+Widget _buildCurrentContent() {
+  switch (_currentContent) {
+    case ProfileContent.profile:
+      return _buildUserProfile();
+    case ProfileContent.account:
+      return _buildAccountContent();
+    case ProfileContent.cards:
+      return _buildCardsContent();
+    case ProfileContent.activeSims:
+      return _buildActiveSimsContent();
+    case ProfileContent.pastSims:
+      return _buildPastSimsContent();
+    case ProfileContent.language:
+      return _buildLanguageContent();
+    case ProfileContent.currency:
+      return _buildCurrencyContent();
+    case ProfileContent.contact:
+      return _buildContactContent();
+    case ProfileContent.help:
+      return _buildHelpContent();
+    default:
+      return _buildUserProfile();
   }
+}
+
+Widget _buildAccountContent() {
+  return _buildCustomContent('account_content'.tr());
+}
+
+Widget _buildCardsContent() {
+  return _buildCustomContent('cards_content'.tr());
+}
+
+Widget _buildActiveSimsContent() {
+  return _buildCustomContent('active_sims_content'.tr());
+}
+
+Widget _buildPastSimsContent() {
+  return _buildCustomContent('past_sims_content'.tr());
+}
+
+Widget _buildLanguageContent() {
+  return Padding(
+    padding: const EdgeInsets.all(20),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 45, 45, 45), // Buton arka plan rengi
+            padding: const EdgeInsets.symmetric(vertical: 20), // Butonun dikey paddingi
+            textStyle: const TextStyle(fontSize: 18), // Yazı büyüklüğü
+          ),
+          onPressed: () {
+            context.setLocale(const Locale('tr'));
+          },
+          child: const Text(
+            "Türkçe",
+            style: TextStyle(color: Colors.white), // Yazı rengi beyaz
+          ),
+        ),
+        const SizedBox(height: 15), // Butonlar arasında daha fazla boşluk
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 45, 45, 45), // Buton arka plan rengi
+            padding: const EdgeInsets.symmetric(vertical: 20), // Butonun dikey paddingi
+            textStyle: const TextStyle(fontSize: 18), // Yazı büyüklüğü
+          ),
+          onPressed: () {
+            context.setLocale(const Locale('en'));
+          },
+          child: const Text(
+            "English",
+            style: TextStyle(color: Colors.white), // Yazı rengi beyaz
+          ),
+        ),
+        const SizedBox(height: 15), // Butonlar arasında daha fazla boşluk
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 45, 45, 45), // Buton arka plan rengi
+            padding: const EdgeInsets.symmetric(vertical: 20), // Butonun dikey paddingi
+            textStyle: const TextStyle(fontSize: 18), // Yazı büyüklüğü
+          ),
+          onPressed: () {
+            context.setLocale(const Locale('de'));
+          },
+          child: const Text(
+            "Deutsch",
+            style: TextStyle(color: Colors.white), // Yazı rengi beyaz
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+
+Widget _buildCurrencyContent() {
+  return _buildCustomContent('currency_content'.tr());
+}
+
+Widget _buildContactContent() {
+  return _buildCustomContent('contact_content'.tr());
+}
+
+Widget _buildHelpContent() {
+  return _buildCustomContent('help_content'.tr());
+}
+
+Widget _buildCustomContent(String contentText) {
+  return Padding(
+    padding: const EdgeInsets.all(20),
+    child: Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 45, 45, 45),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            contentText,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 15),
+          Text(
+            'content_details'.tr(),
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   
   Widget _buildContentPlaceholder(String contentTitle) {
@@ -195,9 +310,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(height: 15),
-            const Text(
-              "Burada ilgili içerik gösterilecek",
-              style: TextStyle(
+            Text(
+              'content_will_be_shown_here'.tr(),
+              style: const TextStyle(
                 color: Colors.white70,
                 fontSize: 16,
               ),
@@ -253,8 +368,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Profil fotoğraf widget'ı
-  // Profil fotoğraf widget'ı
 Widget _buildProfilePhotoWidget() {
   return GestureDetector(
     onTap: () {
@@ -301,9 +414,9 @@ Widget _buildProfilePhotoWidget() {
         return AlertDialog(
           backgroundColor: const Color.fromARGB(255, 45, 45, 45),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text(
-            'Profil Fotoğrafı',
-            style: TextStyle(color: Colors.white),
+          title: Text(
+            'profile_photo'.tr(),
+            style: const TextStyle(color: Colors.white),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -311,7 +424,7 @@ Widget _buildProfilePhotoWidget() {
               ListTile(
                 leading: const Icon(Icons.add_a_photo, color: Colors.white),
                 title: Text(
-                  _profilePhotoUrl != null ? 'Profil Fotoğrafı Değiştir' : 'Profil Fotoğrafı Ekle',
+                  _profilePhotoUrl != null ? 'change_profile_photo'.tr() : 'add_profile_photo'.tr(),
                   style: const TextStyle(color: Colors.white),
                 ),
                 onTap: () {
@@ -322,9 +435,9 @@ Widget _buildProfilePhotoWidget() {
               if (_profilePhotoUrl != null)
                 ListTile(
                   leading: const Icon(Icons.delete, color: Colors.red),
-                  title: const Text(
-                    'Profil Fotoğrafı Kaldır',
-                    style: TextStyle(color: Colors.white),
+                  title: Text(
+                    'remove_profile_photo'.tr(),
+                    style: const TextStyle(color: Colors.white),
                   ),
                   onTap: () {
                     Navigator.of(context).pop();
@@ -338,9 +451,9 @@ Widget _buildProfilePhotoWidget() {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text(
-                'İptal',
-                style: TextStyle(color: Colors.white),
+              child: Text(
+                'cancel'.tr(),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
           ],
@@ -353,25 +466,25 @@ Widget _buildProfilePhotoWidget() {
   String _getHeaderTitle() {
     switch (_currentContent) {
       case ProfileContent.profile:
-        return 'Profil';
+        return 'profile'.tr();
       case ProfileContent.account:
-        return 'Hesap Bilgileri';
+        return 'account_info'.tr();
       case ProfileContent.cards:
-        return 'Kayıtlı Kartlarım';
+        return 'saved_cards'.tr();
       case ProfileContent.activeSims:
-        return 'Aktif Simlerim';
+        return 'active_sims'.tr();
       case ProfileContent.pastSims:
-        return 'Önceki Simlerim';
+        return 'previous_sims'.tr();
       case ProfileContent.language:
-        return 'Dil Ayarları';
+        return 'language_settings'.tr();
       case ProfileContent.currency:
-        return 'Para Birimi';
+        return 'currency'.tr();
       case ProfileContent.contact:
-        return 'Neo Sım\'e Ulaşın';
+        return 'contact_neo_sim'.tr();
       case ProfileContent.help:
-        return 'Yardım Merkezi';
+        return 'help_center'.tr();
       default:
-        return 'Profil';
+        return 'profile'.tr();
     }
   }
 
@@ -392,9 +505,9 @@ Widget _buildProfilePhotoWidget() {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Giriş Yap / Kaydol',
-              style: TextStyle(
+            Text(
+              'login_register'.tr(),
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
               ),
@@ -434,19 +547,19 @@ Widget _buildProfilePhotoWidget() {
               ),
             ),
             const SizedBox(height: 10),
-            _buildProfileButton("Hesap Bilgileri", () => _changeContent(ProfileContent.account)),
+            _buildProfileButton('account_info'.tr(), () => _changeContent(ProfileContent.account)),
             _buildDivider(),
             // Her buton arasında biraz daha boşluk
             const SizedBox(height: 8),
-            _buildProfileButton("Kayıtlı Kartlarım", () => _changeContent(ProfileContent.cards)),
+            _buildProfileButton('saved_cards'.tr(), () => _changeContent(ProfileContent.cards)),
             _buildDivider(),
             // Her buton arasında biraz daha boşluk
             const SizedBox(height: 8),
-            _buildProfileButton("Aktif Simlerim", () => _changeContent(ProfileContent.activeSims)),
+            _buildProfileButton('active_sims'.tr(), () => _changeContent(ProfileContent.activeSims)),
             _buildDivider(),
             // Her buton arasında biraz daha boşluk
             const SizedBox(height: 8),
-            _buildProfileButton("Önceki Simlerim", () => _changeContent(ProfileContent.pastSims)),
+            _buildProfileButton('previous_sims'.tr(), () => _changeContent(ProfileContent.pastSims)),
             const SizedBox(height: 20), // Alt boşluğu artırdık
             Center(
               child: _buildLogoutButton(),
@@ -475,7 +588,7 @@ Widget _buildProfilePhotoWidget() {
         });
         context.go('/login');
       },
-      child: const Text("Çıkış Yap", style: TextStyle(color: Colors.white)),
+      child: Text('logout'.tr(), style: const TextStyle(color: Colors.white)),
     );
   }
 
@@ -489,19 +602,19 @@ Widget _buildProfilePhotoWidget() {
         ),
         child: Column(
           children: [
-            _buildProfileButton('Dil', () => _changeContent(ProfileContent.language)),
+            _buildProfileButton('language'.tr(), () => _changeContent(ProfileContent.language)),
             _buildDivider(),
             // Her buton arasında biraz daha boşluk
             const SizedBox(height: 8),  
-            _buildProfileButton('Para Birimi', () => _changeContent(ProfileContent.currency)),
+            _buildProfileButton('currency'.tr(), () => _changeContent(ProfileContent.currency)),
             _buildDivider(),
             // Her buton arasında biraz daha boşluk
             const SizedBox(height: 8),
-            _buildProfileButton('Neo Sım\'e ulaşın', () => _changeContent(ProfileContent.contact)),
+            _buildProfileButton('contact_neo_sim'.tr(), () => _changeContent(ProfileContent.contact)),
             _buildDivider(),
             // Her buton arasında biraz daha boşluk
             const SizedBox(height: 8),
-            _buildProfileButton('Yardım Merkezi', () => _changeContent(ProfileContent.help)),
+            _buildProfileButton('help_center'.tr(), () => _changeContent(ProfileContent.help)),
           ],
         ),
       ),
@@ -524,22 +637,3 @@ Widget _buildProfilePhotoWidget() {
     return const Divider(color: Colors.white30, height: 1, thickness: 0.5);
   }
 }
-
-// StorageHelper sınıfına eklenmesi gereken metotlar:
-// 
-// static Future<String?> getUserProfilePhoto() async {
-//   // Kullanıcı profil fotoğrafını getir
-//   // Şimdilik null dönüyor, uygulamanıza göre implement edilmeli
-//   return null;
-// }
-// 
-// static Future<void> removeProfilePhoto() async {
-//   // Profil fotoğrafını kaldır
-//   // Uygulamanıza göre implement edilmeli
-// }
-// 
-// static Future<String?> saveProfilePhoto(String path) async {
-//   // Profil fotoğrafını kaydet ve URL'sini döndür
-//   // Uygulamanıza göre implement edilmeli
-//   return null;
-// }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart'; // bunu ekle
 
 class SearchCountryScreen extends StatefulWidget {
   final List<Map<String, String>> allCountries;
@@ -35,10 +36,7 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
     );
     _animationController.forward();
     
-    // Başlangıçta boş liste ile başlama
     _filteredCountries = [];
-
-    // Add listener to filter countries as user types
     _searchController.addListener(_filterCountries);
   }
 
@@ -53,7 +51,6 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
     String query = _searchController.text.toLowerCase();
     setState(() {
       _hasSearched = true;
-      
       if (query.isEmpty) {
         _filteredCountries = [];
       } else {
@@ -71,7 +68,7 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 45, 45, 45),
         elevation: 0,
-        title: const Text('Ülke Ara', style: TextStyle(color: Colors.white)),
+        title: Text('search_country'.tr(), style: const TextStyle(color: Colors.white)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
@@ -108,11 +105,11 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
                 child: TextField(
                   controller: _searchController,
                   autofocus: true,
-                  decoration: const InputDecoration(
-                    hintText: "Ülke ara...",
-                    prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  decoration: InputDecoration(
+                    hintText: "search_placeholder".tr(),
+                    prefixIcon: const Icon(Icons.search, color: Colors.grey),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                   ),
                 ),
               ),
@@ -120,17 +117,17 @@ class _SearchCountryScreenState extends State<SearchCountryScreen> with SingleTi
               // Mesaj veya Sonuç Listesi
               Expanded(
                 child: !_hasSearched
-                    ? const Center(
+                    ? Center(
                         child: Text(
-                          "Ülke aramak için yukarıyı kullanın",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                          "search_info".tr(),
+                          style: const TextStyle(color: Colors.white, fontSize: 16),
                         ),
                       )
                     : _filteredCountries.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: Text(
-                              "",
-                              style: TextStyle(color: Colors.white, fontSize: 16),
+                              "no_country_found".tr(),
+                              style: const TextStyle(color: Colors.white, fontSize: 16),
                             ),
                           )
                         : ListView.builder(

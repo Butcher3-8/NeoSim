@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/screens/search_county.dart';
 import 'package:flutter_app/services/bottom_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 import '../helpers/storage_helper.dart';
 import '../screens/search_county.dart';
 
@@ -16,136 +17,139 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   String? userName;
   String? selectedCountry; 
+  String? selectedCountryCode; // Ülke kodunu saklayacak değişken
   String? selectedCountryImage; 
 
- 
-  final List<Map<String, String>> allCountries = [
-    {'name': 'Almanya', 'image': 'assets/flags/germany.png'},
-    {'name': 'Arnavutluk', 'image': 'assets/flags/albania.png'},
-    {'name': 'Amerika Birleşik Devletleri', 'image': 'assets/flags/united-states.png'},
-    {'name': 'Avustralya', 'image': 'assets/flags/australia.png'},
-    {'name': 'Arjantin', 'image': 'assets/flags/argentina.png'},
-    {'name': 'Azerbaycan', 'image': 'assets/flags/azerbaijan.png'},
-    {'name': 'Belçika', 'image': 'assets/flags/belgium.png'},
-    {'name': 'Birleşik Arap Emirlikleri', 'image': 'assets/flags/united-arab-emirates.png'},
-    {'name': 'Birleşik Krallık', 'image': 'assets/flags/united-kingdom.png'},
-    {'name': 'Brezilya', 'image': 'assets/flags/brazil-.png'},
-    {'name': 'Bulgaristan', 'image': 'assets/flags/bulgaria.png'},
-    {'name': 'Çin', 'image': 'assets/flags/china.png'},
-    {'name': 'Danimarka', 'image': 'assets/flags/denmark.png'},
-    {'name': 'Endonezya', 'image': 'assets/flags/indonesia.png'},
-    {'name': 'Fas', 'image': 'assets/flags/morocco.png'},
-    {'name': 'Finlandiya', 'image': 'assets/flags/finland.png'},
-    {'name': 'Fransa', 'image': 'assets/flags/france (1).png'},
-    {'name': 'Avusturya', 'image': 'assets/flags/avusturya.png'},
-    {'name': 'Bosna Hersek', 'image': 'assets/flags/bosna.png'},
-    {'name': 'Çek Cumhuriyeti', 'image': 'assets/flags/çekya.png'},
-    {'name': 'Cezayir', 'image': 'assets/flags/cezayir.png'},
-    {'name': 'Kolombiya', 'image': 'assets/flags/colombia.png'},
-    {'name': 'Dominik Cumhuriyeti', 'image': 'assets/flags/dominik.png'},
-    {'name': 'Ekvator', 'image': 'assets/flags/ekvador.png'},
-    {'name': 'Estonya', 'image': 'assets/flags/estonya.png'},
-    {'name': 'Filipinler', 'image': 'assets/flags/filipinler.png'},
-    {'name': 'Gürcistan', 'image': 'assets/flags/gürcü.png'},
-    {'name': 'İzlanda', 'image': 'assets/flags/iceland.png'},
-    {'name': 'İran', 'image': 'assets/flags/iran.png'},
-    {'name': 'Irak', 'image': 'assets/flags/iraq.png'},
-    {'name': 'İrlanda', 'image': 'assets/flags/irlanda.png'},
-    {'name': 'Karadağ', 'image': 'assets/flags/karadağ.png'},
-    {'name': 'Küba', 'image': 'assets/flags/küba.png'},
-    {'name': 'Lihtenştayn', 'image': 'assets/flags/lihtenştayn.png'},
-    {'name': 'Lübnan', 'image': 'assets/flags/lübnan.png'},
-    {'name': 'Lüksemburg', 'image': 'assets/flags/luxembourg.png'},
-    {'name': 'Malezya', 'image': 'assets/flags/malezya.png'},
-    {'name': 'Malta', 'image': 'assets/flags/malta.png'},
-    {'name': 'Moldova', 'image': 'assets/flags/moldova.png'},
-    {'name': 'Paraguay', 'image': 'assets/flags/paraguay.png'},
-    {'name': 'Peru', 'image': 'assets/flags/peru.png'},
-    {'name': 'Şili', 'image': 'assets/flags/şili.png'},
-    {'name': 'Slovakya', 'image': 'assets/flags/slovakya.png'},
-    {'name': 'Slovenya', 'image': 'assets/flags/slovenia.png'},
-    {'name': 'Tunus', 'image': 'assets/flags/tunisia.png'},
-    {'name': 'Urugay', 'image': 'assets/flags/uruguay.png'},
-    {'name': 'Yeni Zelanda', 'image': 'assets/flags/yeni zelanda.png'},
-    {'name': 'Hırvatistan', 'image': 'assets/flags/hırvatistan.png'},
-    {'name': 'Hollanda', 'image': 'assets/flags/netherlands.png'},
-    {'name': 'İspanya', 'image': 'assets/flags/spain.png'},
-    {'name': 'İsveç', 'image': 'assets/flags/sweden.png'},
-    {'name': 'İsviçre', 'image': 'assets/flags/switzerland.png'},
-    {'name': 'İtalya', 'image': 'assets/flags/italy.png'},
-    {'name': 'Japonya', 'image': 'assets/flags/japan.png'},
-    {'name': 'Kanada', 'image': 'assets/flags/canada.png'},
-    {'name': 'Katar', 'image': 'assets/flags/qatar.png'},
-    {'name': 'Kıbrıs Türk Cumhuriyeti', 'image': 'assets/flags/northern-cyprus.png'},
-    {'name': 'Kosova', 'image': 'assets/flags/kosovo.png'},
-    {'name': 'Macaristan', 'image': 'assets/flags/hungary.png'},
-    {'name': 'Meksika', 'image': 'assets/flags/mexico.png'},
-    {'name': 'Mısır', 'image': 'assets/flags/egypt.png'},
-    {'name': 'Norveç', 'image': 'assets/flags/norway.png'},
-    {'name': 'Polonya', 'image': 'assets/flags/poland.png'},
-    {'name': 'Portekiz', 'image': 'assets/flags/portugal.png'},
-    {'name': 'Romanya', 'image': 'assets/flags/romania.png'},
-    {'name': 'Rusya', 'image': 'assets/flags/russia.png'},
-    {'name': 'Sırbistan', 'image': 'assets/flags/serbia.png'},
-    {'name': 'Singapur', 'image': 'assets/flags/singapore.png'},
-    {'name': 'Suudi Arabistan', 'image': 'assets/flags/saudi-arabia.png'},
-    {'name': 'Tayland', 'image': 'assets/flags/thailand.png'},
-    {'name': 'Türkiye', 'image': 'assets/flags/turkey.png'},
-    {'name': 'Ukrayna', 'image': 'assets/flags/ukraine.png'},
-    {'name': 'Yunanistan', 'image': 'assets/flags/greece.png'},
+  // Ülke kodu - bayrak eşleşmeleri
+  final Map<String, String> countryFlags = {
+    'germany': 'assets/flags/germany.png',
+    'albania': 'assets/flags/albania.png',
+    'united_states': 'assets/flags/united-states.png',
+    'australia': 'assets/flags/australia.png',
+    'argentina': 'assets/flags/argentina.png',
+    'azerbaijan': 'assets/flags/azerbaijan.png',
+    'belgium': 'assets/flags/belgium.png',
+    'united_arab_emirates': 'assets/flags/united-arab-emirates.png',
+    'united_kingdom': 'assets/flags/united-kingdom.png',
+    'brazil': 'assets/flags/brazil-.png',
+    'bulgaria': 'assets/flags/bulgaria.png',
+    'china': 'assets/flags/china.png',
+    'denmark': 'assets/flags/denmark.png',
+    'indonesia': 'assets/flags/indonesia.png',
+    'morocco': 'assets/flags/morocco.png',
+    'finland': 'assets/flags/finland.png',
+    'france': 'assets/flags/france (1).png',
+    'austria': 'assets/flags/avusturya.png',
+    'bosnia': 'assets/flags/bosna.png',
+    'czech_republic': 'assets/flags/çekya.png',
+    'algeria': 'assets/flags/cezayir.png',
+    'colombia': 'assets/flags/colombia.png',
+    'dominican_republic': 'assets/flags/dominik.png',
+    'ecuador': 'assets/flags/ekvador.png',
+    'estonia': 'assets/flags/estonya.png',
+    'philippines': 'assets/flags/filipinler.png',
+    'georgia': 'assets/flags/gürcü.png',
+    'iceland': 'assets/flags/iceland.png',
+    'iran': 'assets/flags/iran.png',
+    'iraq': 'assets/flags/iraq.png',
+    'ireland': 'assets/flags/irlanda.png',
+    'montenegro': 'assets/flags/karadağ.png',
+    'cuba': 'assets/flags/küba.png',
+    'liechtenstein': 'assets/flags/lihtenştayn.png',
+    'lebanon': 'assets/flags/lübnan.png',
+    'luxembourg': 'assets/flags/luxembourg.png',
+    'malaysia': 'assets/flags/malezya.png',
+    'malta': 'assets/flags/malta.png',
+    'moldova': 'assets/flags/moldova.png',
+    'paraguay': 'assets/flags/paraguay.png',
+    'peru': 'assets/flags/peru.png',
+    'chile': 'assets/flags/şili.png',
+    'slovakia': 'assets/flags/slovakya.png',
+    'slovenia': 'assets/flags/slovenia.png',
+    'tunisia': 'assets/flags/tunisia.png',
+    'uruguay': 'assets/flags/uruguay.png',
+    'new_zealand': 'assets/flags/yeni zelanda.png',
+    'croatia': 'assets/flags/hırvatistan.png',
+    'netherlands': 'assets/flags/netherlands.png',
+    'spain': 'assets/flags/spain.png',
+    'sweden': 'assets/flags/sweden.png',
+    'switzerland': 'assets/flags/switzerland.png',
+    'italy': 'assets/flags/italy.png',
+    'japan': 'assets/flags/japan.png',
+    'canada': 'assets/flags/canada.png',
+    'qatar': 'assets/flags/qatar.png',
+    'northern_cyprus': 'assets/flags/northern-cyprus.png',
+    'kosovo': 'assets/flags/kosovo.png',
+    'hungary': 'assets/flags/hungary.png',
+    'mexico': 'assets/flags/mexico.png',
+    'egypt': 'assets/flags/egypt.png',
+    'norway': 'assets/flags/norway.png',
+    'poland': 'assets/flags/poland.png',
+    'portugal': 'assets/flags/portugal.png',
+    'romania': 'assets/flags/romania.png',
+    'russia': 'assets/flags/russia.png',
+    'serbia': 'assets/flags/serbia.png',
+    'singapore': 'assets/flags/singapore.png',
+    'saudi_arabia': 'assets/flags/saudi-arabia.png',
+    'thailand': 'assets/flags/thailand.png',
+    'turkey': 'assets/flags/turkey.png',
+    'ukraine': 'assets/flags/ukraine.png',
+    'greece': 'assets/flags/greece.png',
+  };
+
+  // Tüm ülkeler listesi
+  late List<Map<String, String>> allCountries;
   
+  // Popüler eSIM'ler
+  final List<String> popularEsimCodes = [
+    'germany',
+    'united_kingdom',
+    'turkey',
+    'albania',
+    'spain',
+    'france',
+    'italy',
+    'northern_cyprus',
+    'canada',
+    'russia',
+    'kosovo',
+    'egypt',
   ];
 
- 
-  final List<Map<String, String>> popularEsims = [
-    {'name': 'Almanya', 'image': 'assets/flags/germany.png'},
-    {'name': 'Birleşik Krallık', 'image': 'assets/flags/united-kingdom.png'},
-    {'name': 'Türkiye', 'image': 'assets/flags/turkey.png'},
-    {'name': 'Arnavutluk', 'image': 'assets/flags/albania.png'},
-    {'name': 'İspanya', 'image': 'assets/flags/spain.png'},
-    {'name': 'Fransa', 'image': 'assets/flags/france.png'},
-    {'name': 'İtalya', 'image': 'assets/flags/italy.png'},
-    {'name': 'Kıbrıs Türk Cumhuriyeti', 'image': 'assets/flags/northern-cyprus.png'},
-    {'name': 'Kanada', 'image': 'assets/flags/canada.png'},
-    {'name': 'Rusya', 'image': 'assets/flags/russia.png'},
-    {'name': 'Kosova', 'image': 'assets/flags/kosovo.png'},
-    {'name': 'Mısır', 'image': 'assets/flags/egypt.png'},
-  ];
-
-
+  // Plan seçenekleri
   final List<Map<String, String>> planOptions = [
     {
-      'name': 'Mini ',
+      'name': 'home.plans.mini',
       'data': '1 GB',
       'validity': '7 Gün',
       'price': '\$4.50 USD'
     },
     {
-      'name': 'Standard ',
+      'name': 'home.plans.standard',
       'data': '3 GB',
       'validity': '15 Gün',
       'price': '\$8.99 USD'
     },
     {
-      'name': 'Comfort',
+      'name': 'home.plans.comfort',
       'data': '5 GB',
       'validity': '30 Gün',
       'price': '\$12.50 USD'
     },
     {
-      'name': 'Premium ',
+      'name': 'home.plans.premium',
       'data': '10 GB',
       'validity': '30 Gün',
       'price': '\$18.00 USD'
     },
     {
-      'name': 'Ultra ',
+      'name': 'home.plans.ultra',
       'data': '20 GB',
       'validity': '30 Gün',
       'price': '\$24.99 USD'
     },
     {
-      'name': 'Best ',
+      'name': 'home.plans.best',
       'data': '30 GB',
       'validity': '30 Gün',
       'price': '\$39.99 USD'
@@ -156,6 +160,22 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadUserData();
+    _prepareCountryLists();
+  }
+
+  // Ülke listelerini hazırla
+  void _prepareCountryLists() {
+    // Tüm ülkeleri hazırla
+    allCountries = countryFlags.entries.map((entry) {
+      return {
+        'code': entry.key,
+        'name': 'countries.${entry.key}'.tr(),
+        'image': entry.value
+      };
+    }).toList();
+    
+    // Alfabetik sırala
+    allCountries.sort((a, b) => a['name']!.compareTo(b['name']!));
   }
 
   Future<void> _loadUserData() async {
@@ -182,21 +202,22 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
-  void _onCountrySelected(String country, String image) {
+  void _onCountrySelected(String countryCode, String image) {
     setState(() {
-      selectedCountry = country;
+      selectedCountryCode = countryCode;
+      selectedCountry = 'countries.$countryCode'.tr();
       selectedCountryImage = image;
     });
   }
-
 
   void _navigateToSearch(BuildContext context) async {
     await Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => SearchCountryScreen(
           allCountries: allCountries,
-          onCountrySelected: _onCountrySelected,
+          onCountrySelected: (String countryCode, String image) {
+            _onCountrySelected(countryCode, image);
+          },
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(
@@ -210,11 +231,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Dil değişikliğini dinlemek için
+    
+    
+    // Ülke listelerini güncelle (dil değişikliğinde)
+    _prepareCountryLists();
+    
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 28, 28, 28),
       body: Column(
         children: [
-        
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: const BoxDecoration(
@@ -229,7 +255,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                   
                     Row(
                       children: [
                         if (selectedCountry != null && selectedCountryImage != null)
@@ -243,7 +268,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         Text(
-                          selectedCountry ?? 'Hoşgeldiniz',
+                          selectedCountry ?? 'home.welcome'.tr(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
@@ -264,9 +289,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   backgroundColor: Colors.transparent,
                                   side: const BorderSide(color: Colors.white, width: 2),
                                 ),
-                                child: const Text(
-                                  'Giriş Yap',
-                                  style: TextStyle(fontSize: 16),
+                                child: Text(
+                                  'home.login'.tr(),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                               )
                             : Row(
@@ -284,7 +309,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(height: 16),
 
-          
                 if (selectedCountry == null)
                   InkWell(
                     onTap: () => _navigateToSearch(context),
@@ -301,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Icon(Icons.search, color: Colors.grey),
                           ),
                           Text(
-                            "150'den fazla ülkede hızlı veri kullanımı...",
+                            'home.search_placeholder'.tr(),
                             style: TextStyle(color: Colors.grey.shade600),
                           ),
                         ],
@@ -312,7 +336,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-     
           if (selectedCountry != null)
             Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 16.0),
@@ -323,6 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     setState(() {
                       selectedCountry = null;
+                      selectedCountryCode = null;
                       selectedCountryImage = null;
                     });
                   },
@@ -332,14 +356,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
           const SizedBox(height: 8),
 
-         
           if (selectedCountry == null)
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
                 child: Text(
-                  'En Çok Tercih Edilenler',
+                  'home.popular_choices'.tr(),
                   style: TextStyle(
                     fontSize: 20,
                     color: Colors.white,
@@ -357,7 +380,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-         
           Expanded(
             child: selectedCountry == null ? _buildCountryList() : _buildCountryDetails(),
           ),
@@ -370,8 +392,16 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget _buildCountryList() {
+    // Popüler ülkeler listesini oluştur
+    final popularEsims = popularEsimCodes.map((code) {
+      return {
+        'code': code,
+        'name': 'countries.$code'.tr(),
+        'image': countryFlags[code] ?? ''
+      };
+    }).toList();
+
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: popularEsims.length,
@@ -389,6 +419,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             onPressed: () {
               setState(() {
+                selectedCountryCode = country['code'];
                 selectedCountry = country['name'];
                 selectedCountryImage = country['image'];
               });
@@ -413,7 +444,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
 
   Widget _buildCountryDetails() {
     return Padding(
@@ -444,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Expanded(
                           child: Text(
-                            plan['name'] ?? '',
+                            plan['name']!.tr(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -472,17 +502,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  _buildDetailRow(Icons.language, 'KAPSAMA ALANI', selectedCountry ?? ''),
-                  _buildDetailRow(Icons.data_usage, 'VERİ', plan['data'] ?? ''),
-                  _buildDetailRow(Icons.calendar_today, 'GEÇERLİLİK', plan['validity'] ?? ''),
-                  _buildDetailRow(Icons.attach_money, 'FİYAT', plan['price'] ?? ''),
+                  _buildDetailRow(Icons.language, 'home.coverage_area'.tr(), selectedCountry ?? ''),
+                  _buildDetailRow(Icons.data_usage, 'home.data'.tr(), plan['data'] ?? ''),
+                  _buildDetailRow(Icons.calendar_today, 'home.validity'.tr(), plan['validity'] ?? ''),
+                  _buildDetailRow(Icons.attach_money, 'home.price'.tr(), plan['price'] ?? ''),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          
+                          // Burada satın alma işlemleri
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(255, 238, 13, 5),
@@ -492,9 +522,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: const Text(
-                          'HEMEN SATIN AL',
-                          style: TextStyle(
+                        child: Text(
+                          'home.buy_now'.tr(),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -510,7 +540,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
 
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Container(

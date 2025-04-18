@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:easy_localization/easy_localization.dart';  // easy_localization importu
 
 class BottomNavigationBarWidget extends StatelessWidget {
   final int selectedIndex;
@@ -35,14 +35,14 @@ class BottomNavigationBarWidget extends StatelessWidget {
         unselectedItemColor: Colors.grey,
         currentIndex: selectedIndex,
         onTap: onItemTapped,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.store),
-            label: 'Mağaza',
+            icon: const Icon(Icons.store),
+            label: 'store'.tr(),  // 'store' anahtarını easy_localization ile çevir
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profil',
+            icon: const Icon(Icons.account_circle),
+            label: 'profile'.tr(),  // 'profile' anahtarını easy_localization ile çevir
           ),
         ],
         type: BottomNavigationBarType.fixed,
