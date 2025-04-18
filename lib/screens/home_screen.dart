@@ -15,10 +15,10 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   String? userName;
-  String? selectedCountry; // Seçili ülke
-  String? selectedCountryImage; // Seçili ülkenin bayrak resmi
+  String? selectedCountry; 
+  String? selectedCountryImage; 
 
-  // Tüm ülkeler listesi (popüler + diğer tüm ülkeler)
+ 
   final List<Map<String, String>> allCountries = [
     {'name': 'Almanya', 'image': 'assets/flags/germany.png'},
     {'name': 'Arnavutluk', 'image': 'assets/flags/albania.png'},
@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
   
   ];
 
-  // Popüler ülkeler listesi (ana sayfada gösterilecek)
+ 
   final List<Map<String, String>> popularEsims = [
     {'name': 'Almanya', 'image': 'assets/flags/germany.png'},
     {'name': 'Birleşik Krallık', 'image': 'assets/flags/united-kingdom.png'},
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
     {'name': 'Mısır', 'image': 'assets/flags/egypt.png'},
   ];
 
-  // Plan bilgileri için liste
+
   final List<Map<String, String>> planOptions = [
     {
       'name': 'Mini ',
@@ -182,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Ülke seçildiğinde çağrılacak fonksiyon
+
   void _onCountrySelected(String country, String image) {
     setState(() {
       selectedCountry = country;
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  // Arama ekranına yönlendiren fonksiyon
+
   void _navigateToSearch(BuildContext context) async {
     await Navigator.of(context).push(
       PageRouteBuilder(
@@ -214,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: const Color.fromARGB(255, 28, 28, 28),
       body: Column(
         children: [
-          // Üst Menü
+        
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
             decoration: const BoxDecoration(
@@ -229,8 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Eğer ülke seçilmediyse sadece "Hoşgeldiniz" yazısı, 
-                    // seçildiyse ülke bayrağı ve ülke adı yanyana gösterilecek
+                   
                     Row(
                       children: [
                         if (selectedCountry != null && selectedCountryImage != null)
@@ -253,8 +252,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    // Ülke seçili değilse ve kullanıcı giriş yapmışsa email bilgisini göster
-                    // Ülke seçiliyse veya kullanıcı giriş yapmamışsa giriş yap butonunu göster
+                   
                     selectedCountry == null 
                         ? (userName == null
                             ? TextButton(
@@ -281,12 +279,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   const Icon(Icons.account_circle, color: Colors.white, size: 24),
                                 ],
                               ))
-                        : Container(), // Ülke seçiliyse boş bir container göster
+                        : Container(),
                   ],
                 ),
                 const SizedBox(height: 16),
 
-                // Eğer ülke seçili değilse arama çubuğu görünecek
+          
                 if (selectedCountry == null)
                   InkWell(
                     onTap: () => _navigateToSearch(context),
@@ -314,7 +312,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          // Geri Dön butonu - ülke seçiliyse göster
+     
           if (selectedCountry != null)
             Padding(
               padding: const EdgeInsets.only(left: 16.0, top: 16.0),
@@ -334,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           const SizedBox(height: 8),
 
-          // Eğer ülke seçili değilse "En Çok Tercih Edilenler" başlığını göster
+         
           if (selectedCountry == null)
             Align(
               alignment: Alignment.centerLeft,
@@ -359,7 +357,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-          // Eğer ülke seçiliyse detayları göster, değilse listeyi göster
+         
           Expanded(
             child: selectedCountry == null ? _buildCountryList() : _buildCountryDetails(),
           ),
@@ -372,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Ülke listesi gösterimi
+
   Widget _buildCountryList() {
     return ListView.builder(
       padding: const EdgeInsets.all(16),
@@ -416,7 +414,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Seçili ülkenin detaylarını gösteren widget
+
   Widget _buildCountryDetails() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -428,7 +426,7 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(bottom: 16.0),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 28, 92, 128), // Kırmızı arka plan
+                color: const Color.fromARGB(255, 28, 92, 128),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
@@ -464,7 +462,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           child: Center(
                             child: Image.asset(
-                              'assets/icons/sımcard.png', // Yeşil SIM kartınızın yolunu buraya ekleyin
+                              'assets/icons/sımcard.png', 
                               width: 200,
                               height: 190,
                               fit: BoxFit.contain,
@@ -484,7 +482,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Satın alma işlemi buraya gelecek
+                          
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(255, 238, 13, 5),
@@ -513,7 +511,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Bu widget detay satırlarını oluşturmak için
+
   Widget _buildDetailRow(IconData icon, String label, String value) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),

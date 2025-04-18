@@ -5,9 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  final String previousRoute; // Hangi sayfadan geldiğini takip etmek için
-
-  LoginScreen({this.previousRoute = '/home'}); // Varsayılan olarak home sayfası
+  final String previousRoute;
+  LoginScreen({this.previousRoute = '/home'});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -19,9 +18,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
 
-  bool isLoginMode = true; // Giriş ve kayıt formu arasında geçişi kontrol eder
+  bool isLoginMode = true;
   
-  // Error handling
+ 
   String? errorMessage;
   bool showError = false;
 
@@ -32,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   @override
   void dispose() {
-    // Clean up controllers
+   
     emailController.dispose();
     passwordController.dispose();
     nameController.dispose();
@@ -40,14 +39,14 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // Hata gösterme fonksiyonu
+
   void showErrorMessage(String message) {
     setState(() {
       errorMessage = message;
       showError = true;
     });
     
-    // 4 saniye sonra hata mesajını kaldır
+    
     Future.delayed(Duration(seconds: 4), () {
       if (mounted) {
         setState(() {
@@ -57,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  // Şifre doğrulama
+ 
   String? validatePassword(String password) {
     if (password.length < 8) return "Şifre en az 8 karakter olmalıdır";
     if (!RegExp(r'[A-Z]').hasMatch(password)) return "Şifre büyük harf içermelidir";
@@ -66,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return null;
   }
 
-  // Email doğrulama
+ 
   String? validateEmail(String email) {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(email)) return "Geçerli bir email adresi giriniz";
@@ -90,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
     
-    // Şifre kontrolü
+   
     if (password.isEmpty) {
       showErrorMessage("Şifre giriniz");
       return;
@@ -99,8 +98,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final user = await StorageHelper.loginUser(email, password);
 
     if (user != null) {
-      await StorageHelper.setCurrentUser(email); // Kullanıcıyı kaydet
-      context.go('/profile'); // GoRouter ile yönlendirme
+      await StorageHelper.setCurrentUser(email); 
+      context.go('/profile');
     } else {
       showErrorMessage("Böyle bir kullanıcı bulunamadı");
     }
@@ -145,21 +144,21 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Kullanıcıyı kaydet
+    
     await StorageHelper.saveUser(email, password);
 
-    // Başarı mesajı
+   
     setState(() {
       errorMessage = "Başarıyla Kayıt Oldunuz";
       showError = true;
     });
     
-    // 2 saniye sonra başarı mesajını kaldır ve giriş ekranına dön
+    
     Future.delayed(Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
           showError = false;
-          isLoginMode = true; // Kayıt işleminden sonra giriş ekranına dön
+          isLoginMode = true; 
         });
       }
     });
@@ -192,12 +191,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         children: [
                           
-                          // Logo
+                         
                           Center(
                             child: Image.asset(
-                              'assets/icons/neo.png', // Logo dosyanızın yolu
-                              height: 250, // Logo yüksekliği
-                              width: 400, // Logo genişliği
+                              'assets/icons/neo.png', 
+                              height: 250, 
+                              width: 400, 
                             ),
                           ),
                           SizedBox(height: 20),

@@ -14,7 +14,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
 
-    // 9 saniye sonra '/home' rotasına yönlendirme
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 2000), () {
         if (mounted) {

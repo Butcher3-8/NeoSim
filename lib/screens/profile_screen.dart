@@ -50,10 +50,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadUserData() async {
     try {
       String? email = await StorageHelper.getCurrentUser();
-      // Profil fotoğraf URL'sini StorageHelper'dan almak (implementasyon gerektiriyor)
+      
       String? photoUrl = await StorageHelper.getUserProfilePhoto();
       setState(() {
-        userName = email; // Kullanıcı adı olarak email göster
+        userName = email; 
         _profilePhotoUrl = photoUrl;
       });
     } catch (e) {
@@ -61,47 +61,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  // İçerik türünü değiştiren metot
+ 
   void _changeContent(ProfileContent content) {
     setState(() {
       _currentContent = content;
     });
   }
 
-  // Ana profil içeriğine dönmek için
+  
   void _backToMainProfile() {
     setState(() {
       _currentContent = ProfileContent.profile;
     });
   }
 
-  // Profil fotoğrafını değiştir
+ 
   Future<void> _changeProfilePhoto() async {
-    // Burada fotoğraf seçme işlemleri yapılacak
-    // Örnek implementasyon (image_picker paketi ile):
     
-    /* 
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     
-    if (image != null) {
-      // Fotoğrafı kaydet ve URL'sini güncelle
-      String? photoUrl = await StorageHelper.saveProfilePhoto(image.path);
-      setState(() {
-        _profilePhotoUrl = photoUrl;
-      });
-    }
-    */
+    // FOTO DEĞİŞTİRME YERİ
+
     
-    // Şimdilik basit bir mesaj göster
+  
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Profil fotoğrafı değiştirme işlemi başlatıldı')),
     );
   }
 
-  // Profil fotoğrafını kaldır
+  
   Future<void> _removeProfilePhoto() async {
-    // Profil fotoğrafını kaldırma işlemleri
+  
     await StorageHelper.removeProfilePhoto();
     setState(() {
       _profilePhotoUrl = null;
@@ -126,10 +115,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildLoginButton()
             else 
               _buildCurrentContent(),
-            // Alt ayarlar bölümünü sadece ana profil içeriğinde göster
+            
             if (_currentContent == ProfileContent.profile && userName != null)
               _buildSettingsSection(),
-            // Azaltılmış alt boşluk
+        
             const SizedBox(height: 30),
           ],
         ),
@@ -141,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Geri dönüş butonu
+ 
   Widget _buildBackButton() {
     return Align(
       alignment: Alignment.topLeft,
@@ -158,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Mevcut içeriğe göre doğru widget'ı göster
+
   Widget _buildCurrentContent() {
     switch (_currentContent) {
       case ProfileContent.profile:
@@ -184,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  // İçerik göstermek için basit placeholder widget
+  
   Widget _buildContentPlaceholder(String contentTitle) {
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -220,7 +209,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileHeader() {
-    // Ana profil için büyük header, alt içerikler için küçük header
+    
     double headerHeight = _currentContent == ProfileContent.profile ? 140.0 : 80.0;
     
     return Container(
