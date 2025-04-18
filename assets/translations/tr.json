@@ -48,6 +48,7 @@
     }
   },
   "countries": {
+    
     "germany": "Almanya",
     "albania": "Arnavutluk",
     "united_states": "Amerika Birleşik Devletleri",
@@ -127,5 +128,26 @@
   "search_info": "Yukarıdaki alanı kullanarak arama yapabilirsiniz",
   "no_country_found": "Ülke bulunamadı",
   "store": "Mağaza",
-  "profile": "Profil"
+  "login": "Giriş Yap",
+  "register": "Kayıt Ol",
+  "name": "Ad Soyad",
+  "email": "Email",
+  "password": "Şifre",
+  "confirm_password": "Şifre Tekrar",
+  "already_have_account": "Zaten bir hesabınız var mı? Giriş yapın",
+  "dont_have_account": "Hesabınız yok mu? Kayıt olun",
+  "login_success": "Başarıyla Kayıt Oldunuz",
+  "enter_email": "Email adresi giriniz",
+  "invalid_email": "Geçerli bir email adresi giriniz",
+  "enter_password": "Şifre giriniz",
+  "password_mismatch": "Şifreler uyuşmuyor",
+  "password_length": "Şifre en az 8 karakter olmalıdır",
+  "password_upper": "Şifre büyük harf içermelidir",
+  "password_lower": "Şifre küçük harf içermelidir",
+  "password_number": "Şifre en az bir rakam içermelidir",
+  "user_not_found": "Böyle bir kullanıcı bulunamadı",
+  "enter_name": "Ad Soyad giriniz",
+  "login_text": "Giriş Yap",
+  "register_text": "Kayıt Ol",
+  "data_protection": "Tüm verileriniz NEO SIM ŞİRKETİ tarafından profesyonel bir şekilde saklanıp korunmaktadır."
 }

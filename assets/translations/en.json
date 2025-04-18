@@ -48,6 +48,7 @@
     }
   },
   "countries": {
+ 
     "germany": "Germany",
     "albania": "Albania",
     "united_states": "United States of America",
@@ -127,5 +128,26 @@
   "search_info": "Use the field above to search",
   "no_country_found": "No country found",
   "store": "Store",
-  "profile": "Profile"
+  "login": "Login",
+  "register": "Register",
+  "name": "Name Surname",
+  "email": "Email",
+  "password": "Password",
+  "confirm_password": "Confirm Password",
+  "already_have_account": "Already have an account? Login",
+  "dont_have_account": "Don't have an account? Register",
+  "login_success": "Successfully Registered",
+  "enter_email": "Please enter email address",
+  "invalid_email": "Please enter a valid email address",
+  "enter_password": "Please enter password",
+  "password_mismatch": "Passwords do not match",
+  "password_length": "Password must be at least 8 characters",
+  "password_upper": "Password must contain an uppercase letter",
+  "password_lower": "Password must contain a lowercase letter",
+  "password_number": "Password must contain at least one number",
+  "user_not_found": "User not found",
+  "enter_name": "Please enter name surname",
+  "login_text": "Login",
+  "register_text": "Register",
+  "data_protection": "All your data is securely stored and protected by NEO SIM COMPANY."
 }

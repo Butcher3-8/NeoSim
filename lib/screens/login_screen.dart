@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/helpers/storage_helper.dart';
-import 'package:flutter_app/screens/profile_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatefulWidget {
   final String previousRoute;
@@ -19,19 +18,11 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController confirmPasswordController = TextEditingController();
 
   bool isLoginMode = true;
-  
- 
   String? errorMessage;
   bool showError = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-  
-  @override
   void dispose() {
-   
     emailController.dispose();
     passwordController.dispose();
     nameController.dispose();
@@ -39,14 +30,11 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-
   void showErrorMessage(String message) {
     setState(() {
       errorMessage = message;
       showError = true;
     });
-    
-    
     Future.delayed(Duration(seconds: 4), () {
       if (mounted) {
         setState(() {
@@ -56,56 +44,50 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
- 
   String? validatePassword(String password) {
-    if (password.length < 8) return "Şifre en az 8 karakter olmalıdır";
-    if (!RegExp(r'[A-Z]').hasMatch(password)) return "Şifre büyük harf içermelidir";
-    if (!RegExp(r'[a-z]').hasMatch(password)) return "Şifre küçük harf içermelidir";
-    if (!RegExp(r'[0-9]').hasMatch(password)) return "Şifre en az bir rakam içermelidir";
+    if (password.length < 8) return tr("password_length");
+    if (!RegExp(r'[A-Z]').hasMatch(password)) return tr("password_uppercase");
+    if (!RegExp(r'[a-z]').hasMatch(password)) return tr("password_lowercase");
+    if (!RegExp(r'[0-9]').hasMatch(password)) return tr("password_number");
     return null;
   }
 
- 
   String? validateEmail(String email) {
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(email)) return "Geçerli bir email adresi giriniz";
+    if (!emailRegex.hasMatch(email)) return tr("invalid_email");
     return null;
   }
 
-  // Giriş fonksiyonu
   void login() async {
     String email = emailController.text;
     String password = passwordController.text;
-    
-    // Email kontrolü
+
     if (email.isEmpty) {
-      showErrorMessage("Email adresi giriniz");
+      showErrorMessage(tr("enter_email"));
       return;
     }
-    
+
     String? emailError = validateEmail(email);
     if (emailError != null) {
       showErrorMessage(emailError);
       return;
     }
-    
-   
+
     if (password.isEmpty) {
-      showErrorMessage("Şifre giriniz");
+      showErrorMessage(tr("enter_password"));
       return;
     }
 
     final user = await StorageHelper.loginUser(email, password);
 
     if (user != null) {
-      await StorageHelper.setCurrentUser(email); 
+      await StorageHelper.setCurrentUser(email);
       context.go('/profile');
     } else {
-      showErrorMessage("Böyle bir kullanıcı bulunamadı");
+      showErrorMessage(tr("user_not_found"));
     }
   }
 
-  // Kayıt olma fonksiyonu
   void register() async {
     String name = nameController.text;
     String email = emailController.text;
@@ -113,28 +95,28 @@ class _LoginScreenState extends State<LoginScreen> {
     String confirmPassword = confirmPasswordController.text;
 
     if (name.isEmpty) {
-      showErrorMessage("Ad Soyad giriniz");
+      showErrorMessage(tr("enter_name"));
       return;
     }
-    
+
     if (email.isEmpty) {
-      showErrorMessage("Email adresi giriniz");
+      showErrorMessage(tr("enter_email"));
       return;
     }
-    
+
     String? emailError = validateEmail(email);
     if (emailError != null) {
       showErrorMessage(emailError);
       return;
     }
-    
+
     if (password.isEmpty) {
-      showErrorMessage("Şifre giriniz");
+      showErrorMessage(tr("enter_password"));
       return;
     }
-    
+
     if (password != confirmPassword) {
-      showErrorMessage("Şifreler uyuşmuyor");
+      showErrorMessage(tr("password_mismatch"));
       return;
     }
 
@@ -144,21 +126,18 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    
     await StorageHelper.saveUser(email, password);
 
-   
     setState(() {
-      errorMessage = "Başarıyla Kayıt Oldunuz";
+      errorMessage = tr("login_success");
       showError = true;
     });
-    
-    
+
     Future.delayed(Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
           showError = false;
-          isLoginMode = true; 
+          isLoginMode = true;
         });
       }
     });
@@ -167,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 28, 28, 28), // Arka plan rengi
+      backgroundColor: Color.fromARGB(255, 28, 28, 28),
       body: SafeArea(
         child: Stack(
           children: [
@@ -175,102 +154,60 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-
-                     Align(
+                  Align(
                     alignment: Alignment.topLeft,
                     child: IconButton(
                       icon: Icon(Icons.arrow_back, color: Colors.white),
                       onPressed: () {
-                        context.go(widget.previousRoute); // Önceki sayfaya dön
+                        context.go(widget.previousRoute);
                       },
                     ),
                   ),
-
                   Expanded(
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          
-                         
                           Center(
                             child: Image.asset(
-                              'assets/icons/neo.png', 
-                              height: 250, 
-                              width: 400, 
+                              'assets/icons/neo.png',
+                              height: 250,
+                              width: 400,
                             ),
                           ),
                           SizedBox(height: 20),
-                          
-                          // Kayıt olma formu
                           if (!isLoginMode)
                             TextField(
                               controller: nameController,
-                              decoration: InputDecoration(
-                                labelText: 'Ad Soyad',
-                                labelStyle: TextStyle(color: Colors.white),
-                                filled: true,
-                                fillColor: Color.fromARGB(255, 45, 45, 45),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
+                              decoration: inputDecoration(tr("name")),
                               style: TextStyle(color: Colors.white),
                             ),
                           if (!isLoginMode) SizedBox(height: 12),
                           TextField(
                             controller: emailController,
                             keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              labelStyle: TextStyle(color: Colors.white),
-                              filled: true,
-                              fillColor: Color.fromARGB(255, 45, 45, 45),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
+                            decoration: inputDecoration(tr("email")),
                             style: TextStyle(color: Colors.white),
                           ),
                           SizedBox(height: 12),
                           TextField(
                             controller: passwordController,
                             obscureText: true,
-                            decoration: InputDecoration(
-                              labelText: 'Şifre',
-                              labelStyle: TextStyle(color: Colors.white),
-                              filled: true,
-                              fillColor: Color.fromARGB(255, 45, 45, 45),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
+                            decoration: inputDecoration(tr("password")),
                             style: TextStyle(color: Colors.white),
                           ),
                           SizedBox(height: 12),
-                          if (!isLoginMode) 
+                          if (!isLoginMode)
                             TextField(
                               controller: confirmPasswordController,
                               obscureText: true,
-                              decoration: InputDecoration(
-                                labelText: 'Şifre Tekrar',
-                                labelStyle: TextStyle(color: Colors.white),
-                                filled: true,
-                                fillColor: Color.fromARGB(255, 45, 45, 45),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
+                              decoration: inputDecoration(tr("confirm_password")),
                               style: TextStyle(color: Colors.white),
                             ),
                           SizedBox(height: 32),
                           ElevatedButton(
                             onPressed: isLoginMode ? login : register,
                             child: Text(
-                              isLoginMode ? 'Giriş Yap' : 'Kayıt Ol',
+                              isLoginMode ? tr("login") : tr("register"),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -278,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color.fromARGB(255, 45, 45, 45),
-                              foregroundColor: Colors.white, 
+                              foregroundColor: Colors.white,
                               minimumSize: Size(double.infinity, 50),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               elevation: 5,
@@ -288,13 +225,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           TextButton(
                             onPressed: () {
                               setState(() {
-                                isLoginMode = !isLoginMode; // Kayıt ve giriş ekranları arasında geçiş yap
-                                // Geçiş yaparken hata mesajını temizle
+                                isLoginMode = !isLoginMode;
                                 showError = false;
                               });
                             },
                             child: Text(
-                              isLoginMode ? 'Hesabınız yok mu? Kayıt olun' : 'Zaten bir hesabınız var mı? Giriş yapın',
+                              isLoginMode ? tr("dont_have_account") : tr("already_have_account"),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
@@ -305,11 +241,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  // Disclaimer text positioned at the bottom
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
                     child: Text(
-                      'Tüm verileriniz NEO SIM ŞİRKETİ tarafından profesyonel bir şekilde saklanıp korunmaktadır.',
+                      tr("data_protection"),
                       style: TextStyle(color: Colors.white70, fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
@@ -317,12 +252,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ],
               ),
             ),
-            
-            // Animated Error Message
             AnimatedPositioned(
               duration: Duration(milliseconds: 300),
               curve: Curves.easeInOut,
-              top: showError ? 20 : -100, // Show from top or hide above screen
+              top: showError ? 20 : -100,
               left: 0,
               right: 0,
               child: Center(
@@ -330,8 +263,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   margin: EdgeInsets.symmetric(horizontal: 20),
                   padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   decoration: BoxDecoration(
-                    color: errorMessage?.contains("Başarıyla") == true 
-                        ? Colors.green.shade800 
+                    color: errorMessage?.contains(tr("login_success")) == true
+                        ? Colors.green.shade800
                         : Colors.red.shade800,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
@@ -345,8 +278,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Row(
                     children: [
                       Icon(
-                        errorMessage?.contains("Başarıyla") == true 
-                            ? Icons.check_circle 
+                        errorMessage?.contains(tr("register_success")) == true
+                            ? Icons.check_circle
                             : Icons.error_outline,
                         color: Colors.white,
                       ),
@@ -379,6 +312,19 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  InputDecoration inputDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(color: Colors.white),
+      filled: true,
+      fillColor: Color.fromARGB(255, 45, 45, 45),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide.none,
       ),
     );
   }

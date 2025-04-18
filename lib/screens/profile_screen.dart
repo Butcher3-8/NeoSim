@@ -605,9 +605,7 @@ Widget _buildProfilePhotoWidget() {
             _buildProfileButton('language'.tr(), () => _changeContent(ProfileContent.language)),
             _buildDivider(),
             // Her buton arasında biraz daha boşluk
-            const SizedBox(height: 8),  
-            _buildProfileButton('currency'.tr(), () => _changeContent(ProfileContent.currency)),
-            _buildDivider(),
+           
             // Her buton arasında biraz daha boşluk
             const SizedBox(height: 8),
             _buildProfileButton('contact_neo_sim'.tr(), () => _changeContent(ProfileContent.contact)),
